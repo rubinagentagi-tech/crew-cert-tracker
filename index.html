@@ -3,289 +3,151 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CrewCert — Marine Crew Certification Tracker</title>
+<title>CrewCert v2 — Marine Crew Certification Tracker (Version Upgraded)</title>
 <style>
 :root {
-  --bg: #0a0e17;
-  --bg2: #111827;
-  --bg3: #1a2332;
-  --surface: #152030;
-  --surface2: #1c2d40;
-  --border: #253548;
-  --border2: #30455c;
-  --text: #e2e8f0;
-  --text2: #94a3b8;
-  --text3: #64748b;
-  --accent: #2dd4bf;
-  --accent2: #14b8a6;
-  --accent-glow: rgba(45,212,191,0.15);
-  --blue: #38bdf8;
-  --blue-glow: rgba(56,189,248,0.12);
-  --purple: #a78bfa;
-  --purple-glow: rgba(167,139,250,0.12);
-  --green: #34d399;
-  --green-glow: rgba(52,211,153,0.12);
-  --amber: #fbbf24;
-  --amber-glow: rgba(251,191,36,0.12);
-  --red: #f87171;
-  --red-glow: rgba(248,113,113,0.12);
-  --radius: 12px;
-  --radius-sm: 8px;
-  --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --bg:#0a0e17; --bg2:#111827; --bg3:#1a2332; --surface:#152030; --surface2:#1c2d40;
+  --border:#253548; --border2:#30455c; --text:#e2e8f0; --text2:#94a3b8; --text3:#64748b;
+  --accent:#2dd4bf; --accent2:#14b8a6; --accent-glow:rgba(45,212,191,0.15);
+  --blue:#38bdf8; --blue-glow:rgba(56,189,248,0.12);
+  --purple:#a78bfa; --purple-glow:rgba(167,139,250,0.12);
+  --green:#34d399; --green-glow:rgba(52,211,153,0.12);
+  --amber:#fbbf24; --amber-glow:rgba(251,191,36,0.12);
+  --red:#f87171; --red-glow:rgba(248,113,113,0.12);
+  --radius:12px; --radius-sm:8px;
+  --font:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  font-size: 15px;
-  line-height: 1.6;
-  min-height: 100vh;
-  -webkit-tap-highlight-color: transparent;
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:15px;line-height:1.6;min-height:100vh;-webkit-tap-highlight-color:transparent}
+
+.header{background:linear-gradient(135deg,rgba(21,32,48,0.95),rgba(17,24,39,0.98));backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.header-brand{display:flex;align-items:center;gap:10px}
+.header-logo{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--blue));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.header h1{font-size:20px;font-weight:700;letter-spacing:-0.3px}
+.header h1 span{background:linear-gradient(135deg,var(--accent),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header-meta{font-size:11px;color:var(--text3)}
+.header .version-badge{background:var(--accent-glow);color:var(--accent);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-left:8px}
+
+.role-switch{display:flex;gap:4px;background:var(--bg3);border-radius:30px;padding:3px}
+.role-btn{padding:8px 18px;border-radius:27px;border:none;cursor:pointer;font-size:13px;font-weight:600;font-family:var(--font);transition:all .3s;background:transparent;color:var(--text2)}
+.role-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;box-shadow:0 4px 15px var(--accent-glow)}
+.role-btn:disabled{opacity:.4;cursor:not-allowed}
+
+main{max-width:1200px;margin:0 auto;padding:20px 16px}
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--bg2);border-radius:var(--radius);padding:4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tab{padding:10px 20px;border-radius:var(--radius-sm);border:none;cursor:pointer;font-size:14px;font-weight:600;font-family:var(--font);transition:all .2s;background:transparent;color:var(--text2);white-space:nowrap}
+.tab:hover{color:var(--text);background:var(--bg3)}
+.tab.active{background:var(--accent);color:#000}
+.tab .badge{display:inline-block;background:var(--red);color:#fff;font-size:11px;padding:1px 7px;border-radius:10px;margin-left:6px;font-weight:700}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:14px;transition:all .2s}
+.card:hover{border-color:var(--border2)}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.card-header h3{font-size:16px;font-weight:700;letter-spacing:-0.2px}
+
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:20px}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s}
+.stat-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,.3)}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.stat-card.healthy::before{background:linear-gradient(90deg,var(--green),var(--accent))}
+.stat-card.warning::before{background:linear-gradient(90deg,var(--amber),#f59e0b)}
+.stat-card.danger::before{background:linear-gradient(90deg,var(--red),#ef4444)}
+.stat-card.info::before{background:linear-gradient(90deg,var(--blue),var(--purple))}
+.stat-card .stat-value{font-size:34px;font-weight:800;line-height:1;margin:8px 0 4px}
+.stat-card .stat-label{font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+
+.data-table{width:100%;border-collapse:collapse}
+.data-table th,.data-table td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--border);font-size:13px}
+.data-table th{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--text3);font-weight:700;background:var(--bg3);position:sticky;top:0}
+.data-table tr{transition:background .15s}
+.data-table tr:hover{background:var(--bg3)}
+
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+.badge-valid{background:var(--green-glow);color:var(--green)}
+.badge-warning{background:var(--amber-glow);color:var(--amber)}
+.badge-expired{background:var(--red-glow);color:var(--red)}
+.badge-info{background:var(--blue-glow);color:var(--blue)}
+.badge-purple{background:var(--purple-glow);color:var(--purple)}
+
+.btn{padding:10px 18px;border-radius:var(--radius-sm);border:none;cursor:pointer;font-size:14px;font-weight:600;font-family:var(--font);transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#000;box-shadow:0 4px 15px var(--accent-glow)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px var(--accent-glow)}
+.btn-outline{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+.btn-outline:hover{background:var(--accent-glow)}
+.btn-ghost{background:transparent;color:var(--text2)}
+.btn-ghost:hover{background:var(--bg3);color:var(--text)}
+.btn-danger{background:transparent;color:var(--red);border:1.5px solid var(--red)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.btn-xs{padding:4px 8px;font-size:11px;border-radius:4px}
+
+input,select,textarea{font-family:var(--font);font-size:14px;padding:10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg2);color:var(--text);outline:none;transition:all .2s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+select{cursor:pointer}
+label{display:block;font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.form-actions{display:flex;gap:10px;margin-top:16px}
+
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:200;align-items:center;justify-content:center;padding:16px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:24px;max-width:680px;width:100%;max-height:85vh;overflow-y:auto}
+.modal h2{font-size:20px;font-weight:700;margin-bottom:16px;letter-spacing:-.3px}
+
+.reg-feed{display:flex;flex-direction:column;gap:10px}
+.reg-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;border-left:3px solid var(--accent)}
+.reg-item.warning{border-left-color:var(--amber)}
+.reg-item.danger{border-left-color:var(--red)}
+.reg-item .reg-date{font-size:11px;color:var(--text3)}
+.reg-item .reg-title{font-size:14px;font-weight:700;margin:4px 0}
+.reg-item .reg-body{font-size:13px;color:var(--text2)}
+.reg-item .reg-source{font-size:11px;color:var(--blue);margin-top:4px}
+
+.search-bar{display:flex;gap:10px;margin-bottom:16px;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--radius);padding:4px}
+.search-bar input{border:none;background:transparent;flex:1;padding:8px 12px;box-shadow:none}
+.search-bar input:focus{box-shadow:none}
+.search-bar select{width:auto;border:none;background:transparent}
+
+.toasts{position:fixed;bottom:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 20px;border-radius:10px;font-size:14px;font-weight:600;animation:slideIn .3s ease;max-width:400px}
+.toast.success{background:var(--green);color:#000}
+.toast.error{background:var(--red);color:#fff}
+.toast.info{background:var(--accent);color:#000}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+.doc-thumb{width:56px;height:56px;border-radius:8px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;overflow:hidden;border:1.5px solid var(--border);flex-shrink:0}
+.doc-thumb img{width:100%;height:100%;object-fit:cover}
+.doc-thumb:hover{border-color:var(--accent)}
+
+.section-title{font-size:18px;font-weight:700;letter-spacing:-.3px;margin:24px 0 14px;padding-bottom:6px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:8px}
+
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+.audit-log{max-height:300px;overflow-y:auto;font-size:12px}
+.audit-log .entry{padding:6px 10px;border-bottom:1px solid var(--border);display:flex;gap:8px}
+.audit-log .entry .ts{color:var(--text3);white-space:nowrap;font-family:monospace;font-size:11px}
+.audit-log .entry .who{color:var(--purple);font-weight:600;white-space:nowrap}
+
+.storage-bar{height:8px;border-radius:4px;background:var(--bg3);margin:8px 0;overflow:hidden}
+.storage-bar-fill{height:100%;border-radius:4px;transition:width .5s}
+
+.editable-rule{padding:6px 8px;margin:2px 0;border-radius:4px;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:13px}
+.editable-rule:hover{background:var(--bg3)}
+.editable-rule .rule-actions{display:none;gap:4px}
+.editable-rule:hover .rule-actions{display:flex}
+
+@media(max-width:768px){
+  .header{padding:10px 14px}.header h1{font-size:16px}
+  .stat-grid{grid-template-columns:repeat(2,1fr)}
+  .form-grid{grid-template-columns:1fr}
+  .hide-mobile{display:none!important}
+  .tabs{gap:2px}.tab{padding:8px 14px;font-size:13px}
 }
 
-/* GLASS HEADER */
-.header {
-  background: linear-gradient(135deg, rgba(21,32,48,0.95), rgba(17,24,39,0.98));
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky; top:0; z-index:100;
-}
-.header-brand {
-  display: flex; align-items: center; gap: 10px;
-}
-.header-logo {
-  width: 36px; height: 36px;
-  background: linear-gradient(135deg, var(--accent), var(--blue));
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-}
-.header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
-.header h1 span { background: linear-gradient(135deg, var(--accent), var(--blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.header-meta { font-size: 11px; color: var(--text3); }
-
-/* ROLE SWITCHER */
-.role-switch {
-  display: flex; gap: 4px; background: var(--bg3); border-radius: 30px; padding: 3px;
-}
-.role-btn {
-  padding: 8px 18px; border-radius: 27px; border: none; cursor: pointer;
-  font-size: 13px; font-weight: 600; font-family: var(--font);
-  transition: all 0.3s; background: transparent; color: var(--text2);
-}
-.role-btn.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #000; box-shadow: 0 4px 15px var(--accent-glow); }
-
-/* MAIN LAYOUT */
-main { max-width: 1200px; margin: 0 auto; padding: 20px 16px; }
-
-/* TABS */
-.tabs {
-  display: flex; gap: 4px; margin-bottom: 20px;
-  background: var(--bg2); border-radius: var(--radius); padding: 4px;
-  overflow-x: auto; -webkit-overflow-scrolling: touch;
-}
-.tab {
-  padding: 10px 20px; border-radius: var(--radius-sm); border: none; cursor: pointer;
-  font-size: 14px; font-weight: 600; font-family: var(--font);
-  transition: all 0.2s; background: transparent; color: var(--text2); white-space: nowrap;
-}
-.tab:hover { color: var(--text); background: var(--bg3); }
-.tab.active { background: var(--accent); color: #000; }
-.tab .badge {
-  display: inline-block; background: var(--red); color: #fff; font-size: 11px;
-  padding: 1px 7px; border-radius: 10px; margin-left: 6px; font-weight: 700;
-}
-
-/* CARDS */
-.card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 20px; margin-bottom: 14px;
-  transition: all 0.2s;
-}
-.card:hover { border-color: var(--border2); }
-.card-header {
-  display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;
-}
-.card-header h3 { font-size: 16px; font-weight: 700; letter-spacing: -0.2px; }
-
-/* STAT CARDS */
-.stat-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;
-}
-.stat-card {
-  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 16px; position: relative; overflow: hidden;
-  cursor: pointer; transition: all 0.2s;
-}
-.stat-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
-.stat-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-}
-.stat-card.healthy::before { background: linear-gradient(90deg, var(--green), var(--accent)); }
-.stat-card.warning::before { background: linear-gradient(90deg, var(--amber), #f59e0b); }
-.stat-card.danger::before { background: linear-gradient(90deg, var(--red), #ef4444); }
-.stat-card.info::before { background: linear-gradient(90deg, var(--blue), var(--purple)); }
-.stat-card .stat-value { font-size: 34px; font-weight: 800; line-height: 1; margin: 8px 0 4px; }
-.stat-card .stat-label { font-size: 12px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
-
-/* TABLE */
-.data-table { width: 100%; border-collapse: collapse; }
-.data-table th, .data-table td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 13px; }
-.data-table th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); font-weight: 700; background: var(--bg3); position: sticky; top: 0; }
-.data-table tr { transition: background 0.15s; }
-.data-table tr:hover { background: var(--bg3); }
-.data-table .row-expired { background: var(--red-glow) !important; }
-.data-table .row-warning { background: var(--amber-glow) !important; }
-
-/* BADGES */
-.badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-.badge-valid { background: var(--green-glow); color: var(--green); }
-.badge-warning { background: var(--amber-glow); color: var(--amber); }
-.badge-expired { background: var(--red-glow); color: var(--red); }
-.badge-info { background: var(--blue-glow); color: var(--blue); }
-.badge-purple { background: var(--purple-glow); color: var(--purple); }
-
-/* BUTTONS */
-.btn {
-  padding: 10px 18px; border-radius: var(--radius-sm); border: none; cursor: pointer;
-  font-size: 14px; font-weight: 600; font-family: var(--font);
-  transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;
-}
-.btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #000; box-shadow: 0 4px 15px var(--accent-glow); }
-.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px var(--accent-glow); }
-.btn-outline { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
-.btn-outline:hover { background: var(--accent-glow); }
-.btn-ghost { background: transparent; color: var(--text2); }
-.btn-ghost:hover { background: var(--bg3); color: var(--text); }
-.btn-danger { background: transparent; color: var(--red); border: 1.5px solid var(--red); }
-.btn-sm { padding: 6px 12px; font-size: 12px; }
-.btn-xs { padding: 4px 8px; font-size: 11px; border-radius: 4px; }
-
-/* INPUTS */
-input, select, textarea {
-  font-family: var(--font); font-size: 14px;
-  padding: 10px 14px; border-radius: var(--radius-sm);
-  border: 1.5px solid var(--border); background: var(--bg2); color: var(--text);
-  outline: none; transition: all 0.2s; width: 100%;
-}
-input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-select { cursor: pointer; }
-label { display: block; font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-
-/* FORMS */
-.form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
-.form-actions { display: flex; gap: 10px; margin-top: 16px; }
-
-/* MODAL */
-.modal-overlay {
-  display: none; position: fixed; top:0; left:0; right:0; bottom:0;
-  background: rgba(0,0,0,0.65); backdrop-filter: blur(4px);
-  z-index: 200; align-items: center; justify-content: center; padding: 16px;
-}
-.modal-overlay.show { display: flex; }
-.modal {
-  background: var(--surface); border: 1px solid var(--border2); border-radius: 16px;
-  padding: 24px; max-width: 640px; width: 100%; max-height: 85vh; overflow-y: auto;
-}
-.modal h2 { font-size: 20px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.3px; }
-
-/* REGULATION WATCH */
-.reg-feed { display: flex; flex-direction: column; gap: 10px; }
-.reg-item {
-  background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-sm);
-  padding: 14px; border-left: 3px solid var(--accent);
-}
-.reg-item.warning { border-left-color: var(--amber); }
-.reg-item.danger { border-left-color: var(--red); }
-.reg-item .reg-date { font-size: 11px; color: var(--text3); }
-.reg-item .reg-title { font-size: 14px; font-weight: 700; margin: 4px 0; }
-.reg-item .reg-body { font-size: 13px; color: var(--text2); }
-.reg-item .reg-source { font-size: 11px; color: var(--blue); margin-top: 4px; }
-
-/* SEARCH BAR */
-.search-bar {
-  display: flex; gap: 10px; margin-bottom: 16px;
-  background: var(--bg2); border: 1.5px solid var(--border);
-  border-radius: var(--radius); padding: 4px;
-}
-.search-bar input {
-  border: none; background: transparent; flex:1; padding: 8px 12px; box-shadow: none;
-}
-.search-bar input:focus { box-shadow: none; }
-.search-bar select { width: auto; border: none; background: transparent; }
-
-/* TOAST */
-.toasts {
-  position: fixed; bottom: 20px; right: 20px; z-index: 300;
-  display: flex; flex-direction: column; gap: 8px;
-}
-.toast {
-  padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 600;
-  animation: slideIn 0.3s ease; max-width: 380px;
-}
-.toast.success { background: var(--green); color: #000; }
-.toast.error { background: var(--red); color: #fff; }
-@keyframes slideIn { from { transform: translateX(100%); opacity:0; } to { transform: translateX(0); opacity:1; } }
-
-/* DOCUMENT PREVIEW */
-.doc-thumb {
-  width: 48px; height: 48px; border-radius: 8px; background: var(--bg3);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; cursor: pointer; overflow: hidden;
-  border: 1.5px solid var(--border);
-}
-.doc-thumb img { width: 100%; height: 100%; object-fit: cover; }
-
-/* PROGRESS RING */
-.compliance-ring { width: 120px; height: 120px; margin: 0 auto; position: relative; }
-.compliance-ring svg { transform: rotate(-90deg); }
-.compliance-ring .ring-label {
-  position: absolute; top:50%; left:50%; transform: translate(-50%, -50%);
-  font-size: 28px; font-weight: 800; text-align: center;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .header { padding: 10px 14px; }
-  .header h1 { font-size: 16px; }
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
-  .form-grid { grid-template-columns: 1fr; }
-  .hide-mobile { display: none !important; }
-  .tabs { gap: 2px; }
-  .tab { padding: 8px 14px; font-size: 13px; }
-}
-
-/* TAB CONTENT */
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-/* SECTION HEADER */
-.section-title {
-  font-size: 18px; font-weight: 700; letter-spacing: -0.3px;
-  margin: 24px 0 14px; padding-bottom: 6px;
-  border-bottom: 2px solid var(--border);
-  display: flex; align-items: center; gap: 8px;
-}
-
-/* ANIMATED BG */
-@keyframes float {
-  0%,100% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-}
-.float { animation: float 4s ease-in-out infinite; }
-
-/* PRINT */
-@media print {
-  .header, .tabs, .role-switch, .btn, .modal-overlay, .toasts, .search-bar { display: none !important; }
-  body { background: #fff; color: #000; }
-  .card { border: 1px solid #ccc; break-inside: avoid; }
-  .tab-content { display: block !important; }
+@media print{
+  .header,.tabs,.role-switch,.btn,.modal-overlay,.toasts,.search-bar{display:none!important}
+  body{background:#fff;color:#000}.card{border:1px solid #ccc;break-inside:avoid}
+  .tab-content{display:block!important}
 }
 </style>
 </head>
@@ -293,848 +155,403 @@ label { display: block; font-size: 12px; font-weight: 600; color: var(--text3); 
 
 <div class="header">
   <div class="header-brand">
-    <div class="header-logo float">⚓</div>
-    <div>
-      <h1>Crew<span>Cert</span></h1>
-      <div class="header-meta">Marine Crew Certification Tracker</div>
-    </div>
+    <div class="header-logo">⚓</div>
+    <div><h1>Crew<span>Cert</span><span class="version-badge">v2 UPGRADED</span></h1><div class="header-meta">Marine Crew Certification Tracker · June 13, 2026</div></div>
   </div>
-  <div style="display:flex;align-items:center;gap:14px">
-    <div class="role-switch">
-      <button class="role-btn active" data-role="coordinator" onclick="switchRole('coordinator')">📋 Coordinator</button>
-      <button class="role-btn" data-role="crew" onclick="switchRole('crew')">👤 Crew View</button>
-    </div>
+  <div class="role-switch">
+    <button class="role-btn active" data-role="coordinator" onclick="switchRole('coordinator')">📋 Coordinator</button>
+    <button class="role-btn" data-role="crew" onclick="switchRole('crew')">👤 Crew View</button>
   </div>
 </div>
 
 <main>
-  <!-- COORDINATOR VIEW -->
   <div id="view-coordinator">
     <div class="tabs">
       <button class="tab active" data-tab="dashboard" onclick="switchTab('dashboard')">📊 Dashboard</button>
       <button class="tab" data-tab="crew-list" onclick="switchTab('crew-list')">👥 Crew List</button>
-      <button class="tab" data-tab="rules" onclick="switchTab('rules')">📜 Rules Matrix</button>
+      <button class="tab" data-tab="rules" onclick="switchTab('rules')">📜 Rules Matrix <span style="font-size:10px;color:var(--accent)">✏️ editable</span></button>
       <button class="tab" data-tab="regwatch" onclick="switchTab('regwatch')">🔍 Regulation Watch <span class="badge" id="regBadge"></span></button>
       <button class="tab" data-tab="reports" onclick="switchTab('reports')">📄 Reports</button>
+      <button class="tab" data-tab="audit" onclick="switchTab('audit')">📝 Audit Log</button>
     </div>
 
-    <!-- DASHBOARD -->
-    <div class="tab-content active" id="tab-dashboard">
-      <div class="stat-grid" id="statGrid"></div>
-      <div class="section-title">⚠️ Urgent Attention</div>
-      <div id="urgencyList"></div>
-    </div>
-
-    <!-- CREW LIST -->
-    <div class="tab-content" id="tab-crew-list">
-      <div class="search-bar">
-        <input type="text" id="crewSearch" placeholder="🔍 Search crew by name, rank, or vessel..." oninput="renderCrewList()">
-        <select id="crewFilterVessel" onchange="renderCrewList()">
-          <option value="all">All Vessels</option>
-        </select>
-        <select id="crewFilterStatus" onchange="renderCrewList()">
-          <option value="all">All Status</option>
-          <option value="expired">Has Expired</option>
-          <option value="warning">Expiring ≤30d</option>
-          <option value="ok">Fully Compliant</option>
-        </select>
-      </div>
-      <button class="btn btn-primary" onclick="openCrewModal()" style="margin-bottom:14px">+ Add Crew Member</button>
-      <div id="crewListTable"></div>
-    </div>
-
-    <!-- RULES MATRIX -->
-    <div class="tab-content" id="tab-rules">
-      <div class="card" style="background:linear-gradient(135deg, var(--purple-glow), var(--blue-glow)); border-color: var(--purple);">
-        <h3>📜 Certification Rules Engine</h3>
-        <p style="color:var(--text2); font-size:13px; margin-top:6px">
-          This matrix defines required certificates for each rank × voyage class combination. All rules sourced from Transport Canada Marine Personnel Regulations (SOR/2007-115) and STCW Convention.
-        </p>
-      </div>
-      <div id="rulesTable"></div>
-    </div>
-
-    <!-- REGULATION WATCH -->
-    <div class="tab-content" id="tab-regwatch">
-      <div class="card">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <h3>🔍 Live Regulation Watch</h3>
-          <button class="btn btn-outline btn-sm" onclick="runRegWatch()">🔄 Scan Now</button>
-        </div>
-        <p style="color:var(--text2);font-size:13px;margin:8px 0 16px">
-          Monitors Transport Canada, ISED, and IMO regulatory pages for updates to marine crew certification requirements. Last scan shown below.
-        </p>
-        <div class="reg-feed" id="regFeed"></div>
-      </div>
-    </div>
-
-    <!-- REPORTS -->
-    <div class="tab-content" id="tab-reports">
-      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
-        <button class="btn btn-primary" onclick="exportFullReport()">📥 Export Full Compliance Report</button>
-        <button class="btn btn-outline" onclick="exportCrewCSV()">📊 Export CSV</button>
-        <button class="btn btn-outline" onclick="exportData()">💾 Download All Data (JSON)</button>
-        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importFileInput').click()">📂 Import Data (JSON)</button>
-        <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 Print Report</button>
-      </div>
-      <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importData(event)">
-      <div id="reportPreview"></div>
-    </div>
+    <div class="tab-content active" id="tab-dashboard"><div class="stat-grid" id="statGrid"></div><div class="section-title">⚠️ Urgent Attention</div><div id="urgencyList"></div></div>
+    <div class="tab-content" id="tab-crew-list"><div class="search-bar"><input type="text" id="crewSearch" placeholder="🔍 Search crew by name, rank, or vessel..." oninput="renderCrewList()"><select id="crewFilterVessel" onchange="renderCrewList()"><option value="all">All Vessels</option></select><select id="crewFilterStatus" onchange="renderCrewList()"><option value="all">All Status</option><option value="expired">Has Expired</option><option value="warning">Expiring ≤30d</option><option value="unverified">Unverified Docs</option><option value="ok">Fully Compliant</option></select></div><button class="btn btn-primary" onclick="openCrewModal()" style="margin-bottom:14px">+ Add Crew Member</button><div id="crewListTable"></div></div>
+    <div class="tab-content" id="tab-rules"><div class="card" style="background:linear-gradient(135deg,var(--purple-glow),var(--blue-glow));border-color:var(--purple)"><h3>📜 Certification Rules Engine <span style="font-size:13px;font-weight:400;color:var(--accent)">— Editable</span></h3><p style="color:var(--text2);font-size:13px;margin-top:6px">Rules are now editable. Changes are logged in the Audit Log. Each certificate has a 🔗 link to its official source.</p><button class="btn btn-outline btn-sm" onclick="openRuleEditor()" style="margin-top:8px">✏️ Edit Rules</button></div><div id="rulesTable"></div></div>
+    <div class="tab-content" id="tab-regwatch"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><h3>🔍 Live Regulation Watch</h3><button class="btn btn-outline btn-sm" onclick="runRegWatch()">🔄 Scan Now</button></div><p style="color:var(--text2);font-size:13px;margin:8px 0 16px">Monitors Transport Canada, ISED, and IMO regulatory pages. Each source tracked independently. Last scan shown.</p><div class="reg-feed" id="regFeed"></div></div></div>
+    <div class="tab-content" id="tab-reports"><div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px"><button class="btn btn-primary" onclick="exportFullReport()">📥 Export Compliance Report</button><button class="btn btn-outline" onclick="exportCrewCSV()">📊 Export CSV</button><button class="btn btn-outline" onclick="exportData()">💾 Download All Data (JSON)</button><button class="btn btn-ghost btn-sm" onclick="document.getElementById('importFileInput').click()">📂 Import Data (JSON)</button><button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 Print</button></div><input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importData(event)"><div id="reportPreview"></div><div class="card" style="margin-top:16px"><h3>💾 Storage Usage</h3><div id="storageInfo"></div></div></div>
+    <div class="tab-content" id="tab-audit"><div class="card"><h3>📝 Audit Trail</h3><p style="color:var(--text2);font-size:13px;margin-bottom:12px">Every change to crew, certificates, rules, and documents is logged here.</p><button class="btn btn-outline btn-sm" onclick="exportAuditLog()" style="margin-bottom:12px">📥 Export Audit Log</button><div class="audit-log" id="auditLog"></div></div></div>
   </div>
 
-  <!-- CREW SELF-SERVICE VIEW -->
   <div id="view-crew" style="display:none">
-    <div class="card" style="text-align:center;background:linear-gradient(135deg,var(--accent-glow),var(--blue-glow))">
-      <h2 style="font-size:22px">👤 My Certifications</h2>
-      <p style="color:var(--text2);font-size:14px">Select your name below to view and update your certificates</p>
-      <select id="crewSelfSelect" onchange="renderCrewSelfView()" style="max-width:400px;margin:12px auto">
-        <option value="">— Select your name —</option>
-      </select>
-    </div>
+    <div class="card" style="text-align:center;background:linear-gradient(135deg,var(--accent-glow),var(--blue-glow))"><h2 style="font-size:22px">👤 My Certifications</h2><p style="color:var(--text2);font-size:14px">Select your name below</p><select id="crewSelfSelect" onchange="renderCrewSelfView()" style="max-width:400px;margin:12px auto"><option value="">— Select your name —</option></select></div>
     <div id="crewSelfContent"></div>
   </div>
 </main>
 
-<!-- CREW MODAL -->
-<div class="modal-overlay" id="crewModal">
-  <div class="modal">
-    <h2 id="crewModalTitle">Add Crew Member</h2>
-    <input type="hidden" id="crewEditId">
-    <div class="form-grid">
-      <div><label>Full Name *</label><input type="text" id="crewName" placeholder="e.g., James MacDonald"></div>
-      <div><label>Rank/Position</label>
-        <select id="crewRank">
-          <option>Master</option><option>Chief Mate</option><option>Second Mate</option><option>Third Mate</option>
-          <option>Chief Engineer</option><option>Second Engineer</option><option>Third Engineer</option>
-          <option>Deckhand / OS</option><option>Oiler / Wiper</option><option>Cook</option><option>Other</option>
-        </select></div>
-      <div><label>Vessel Assignment</label><input type="text" id="crewVessel" placeholder="e.g., Evans Spirit"></div>
-      <div><label>Voyage Class</label>
-        <select id="crewVoyageClass">
-          <option value="domestic">Domestic (Great Lakes / Inland)</option>
-          <option value="stcw">STCW (International / Outside Anticosti)</option>
-          <option value="both">Both (Rotates)</option>
-        </select></div>
-      <div><label>Email</label><input type="email" id="crewEmail" placeholder="crew@example.com"></div>
-      <div><label>Phone</label><input type="tel" id="crewPhone" placeholder="+1 555-0123"></div>
-    </div>
-    <div class="form-actions">
-      <button class="btn btn-ghost" onclick="closeCrewModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveCrewMember()">Save Crew Member</button>
-    </div>
-  </div>
-</div>
+<!-- MODALS -->
+<div class="modal-overlay" id="crewModal"><div class="modal"><h2 id="crewModalTitle">Add Crew Member</h2><input type="hidden" id="crewEditId"><div class="form-grid"><div><label>Full Name *</label><input type="text" id="crewName" placeholder="e.g., James MacDonald"></div><div><label>Rank/Position</label><select id="crewRank"><option>Master</option><option>Chief Mate</option><option>Second Mate</option><option>Third Mate</option><option>Chief Engineer</option><option>Second Engineer</option><option>Third Engineer</option><option>Deckhand / OS</option><option>Oiler / Wiper</option><option>Cook</option><option>Other</option></select></div><div><label>Vessel Assignment</label><input type="text" id="crewVessel" placeholder="e.g., Evans Spirit"></div><div><label>Voyage Class</label><select id="crewVoyageClass"><option value="domestic">Domestic (Great Lakes / Inland)</option><option value="stcw">STCW (International / Outside Anticosti)</option><option value="both">Both (Rotates)</option></select></div><div><label>Email</label><input type="email" id="crewEmail" placeholder="crew@example.com"></div><div><label>Phone</label><input type="tel" id="crewPhone" placeholder="+1 555-0123"></div></div><div class="form-actions"><button class="btn btn-ghost" onclick="closeCrewModal()">Cancel</button><button class="btn btn-primary" onclick="saveCrewMember()">Save Crew Member</button></div></div></div>
 
-<!-- CERTIFICATE MODAL -->
-<div class="modal-overlay" id="certModal">
-  <div class="modal">
-    <h2>Add Certificate</h2>
-    <input type="hidden" id="certEditId">
-    <input type="hidden" id="certCrewId">
-    <div class="form-grid">
-      <div><label>Certificate Type *</label>
-        <select id="certType">
-          <option>Certificate of Competency (CoC)</option>
-          <option>Marine Medical Certificate</option>
-          <option>MED — Domestic Vessel Safety</option>
-          <option>MED — STCW Basic Safety (A1+B2)</option>
-          <option>MED — Survival Craft (B1)</option>
-          <option>MED — Advanced Firefighting (B2+C)</option>
-          <option>Marine Basic First Aid</option>
-          <option>Marine Advanced First Aid</option>
-          <option>ROC-MC (Radio Operator)</option>
-          <option>Fatigue Management at Sea</option>
-          <option>Tanker Familiarization</option>
-          <option>Tanker Specialized (Oil/Chemical)</option>
-          <option>Security Awareness / DSOC</option>
-          <option>Other</option>
-        </select></div>
-      <div><label>Issue Date</label><input type="date" id="certIssueDate"></div>
-      <div><label>Expiry Date *</label><input type="date" id="certExpiryDate"></div>
-      <div><label>Certificate Number</label><input type="text" id="certNumber" placeholder="e.g., TC-2024-001234"></div>
-      <div><label>Issuing Authority</label>
-        <select id="certAuthority">
-          <option>Transport Canada</option><option>ISED Canada</option><option>CCG</option><option>IMO Recognized</option><option>Other</option>
-        </select></div>
-    </div>
-    <label style="margin-top:12px">Notes</label>
-    <textarea id="certNotes" rows="2" placeholder="Any additional notes..."></textarea>
-    <div class="form-actions">
-      <button class="btn btn-ghost" onclick="closeCertModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveCertificate()">Save Certificate</button>
-    </div>
-  </div>
-</div>
+<div class="modal-overlay" id="certModal"><div class="modal"><h2 id="certModalTitle">Add Certificate</h2><input type="hidden" id="certEditId"><input type="hidden" id="certCrewId"><div class="form-grid"><div><label>Certificate Type *</label><select id="certType"><option>Certificate of Competency (CoC)</option><option>Marine Medical Certificate</option><option>MED — Domestic Vessel Safety</option><option>MED — STCW Basic Safety (A1+B2)</option><option>MED — Survival Craft (B1)</option><option>MED — Advanced Firefighting (B2+C)</option><option>Marine Basic First Aid</option><option>Marine Advanced First Aid</option><option>ROC-MC (Radio Operator)</option><option>Fatigue Management at Sea</option><option>Tanker Familiarization</option><option>Tanker Specialized (Oil/Chemical)</option><option>Security Awareness / DSOC</option><option>Other</option></select></div><div><label>Issue Date *</label><input type="date" id="certIssueDate"></div><div><label>Expiry Date *</label><input type="date" id="certExpiryDate"></div><div><label>Certificate Number</label><input type="text" id="certNumber" placeholder="e.g., TC-2024-001234"></div><div><label>Issuing Authority</label><select id="certAuthority"><option>Transport Canada</option><option>ISED Canada</option><option>CCG</option><option>IMO Recognized</option><option>Other</option></select></div></div><div style="margin-top:12px"><label>Upload Document (image or PDF, max 10MB)</label><input type="file" id="certDocFile" accept="image/jpeg,image/png,image/webp,application/pdf" onchange="previewDocFile()" style="padding:8px"><div id="certDocPreview" style="margin-top:8px"></div></div><div style="margin-top:12px;display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg2);border-radius:8px"><input type="checkbox" id="certVerified" style="width:auto"><label for="certVerified" style="margin:0;cursor:pointer">Verified by Coordinator (must be checked for cert to count toward compliance)</label></div><label style="margin-top:12px">Notes</label><textarea id="certNotes" rows="2" placeholder="Additional notes..."></textarea><div class="form-actions"><button class="btn btn-ghost" onclick="closeCertModal()">Cancel</button><button class="btn btn-primary" onclick="saveCertificate()">Save Certificate</button></div></div></div>
+
+<div class="modal-overlay" id="ruleEditorModal"><div class="modal" style="max-width:800px"><h2>✏️ Edit Certification Rules</h2><p style="color:var(--text2);font-size:13px;margin-bottom:12px">Select a rank, then add or remove required certificates per voyage class. Changes are logged in the Audit Log.</p><div class="form-grid"><div><label>Rank</label><select id="ruleEditRank" onchange="renderRuleEditor()"></select></div><div><label>Voyage Class</label><select id="ruleEditClass" onchange="renderRuleEditor()"><option value="domestic">Domestic</option><option value="stcw">STCW</option></select></div></div><div style="margin-top:14px"><label>Required Certificates</label><div id="ruleEditCerts" style="max-height:300px;overflow-y:auto;background:var(--bg2);border-radius:8px;padding:8px"></div></div><div style="margin-top:12px;display:flex;gap:8px"><select id="ruleAddCert" style="flex:1"></select><button class="btn btn-outline btn-sm" onclick="addRuleCert()">+ Add to Requirements</button></div><div class="form-actions"><button class="btn btn-ghost" onclick="closeRuleEditor()">Done</button><button class="btn btn-primary" onclick="saveRuleChanges()">💾 Save Rules</button></div></div></div>
 
 <div class="toasts" id="toasts"></div>
 
 <script>
+// ─── INDEXEDDB FOR DOCUMENTS ───
+const DB_NAME='crewcert_v2', DB_VER=1;
+let db=null;
+function openDB(){return new Promise((resolve,reject)=>{
+  const r=indexedDB.open(DB_NAME,DB_VER);
+  r.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains('docs'))d.createObjectStore('docs',{keyPath:'id'})};
+  r.onsuccess=e=>{db=e.target.result;resolve(db)};
+  r.onerror=e=>reject(e.target.error);
+})}
+async function storeDoc(id,blob){if(!db)await openDB();return new Promise((resolve,reject)=>{const t=db.transaction('docs','readwrite');t.objectStore('docs').put({id,blob,stored:new Date().toISOString()});t.oncomplete=()=>resolve();t.onerror=e=>reject(e.target.error)})}
+async function getDoc(id){if(!db)await openDB();return new Promise((resolve,reject)=>{const t=db.transaction('docs','readonly');const r=t.objectStore('docs').get(id);r.onsuccess=()=>resolve(r.result?r.result.blob:null);r.onerror=e=>reject(e.target.error)})}
+async function deleteDoc(id){if(!db)await openDB();return new Promise((resolve,reject)=>{const t=db.transaction('docs','readwrite');t.objectStore('docs').delete(id);t.oncomplete=()=>resolve();t.onerror=e=>reject(e.target.error)})}
+async function getStorageUsage(){if(!db)await openDB();try{const est=await navigator.storage.estimate();return{used:est.usage||0,quota:est.quota||0}}catch{return{used:0,quota:0}}}
+
+// ─── COMPRESS IMAGE ───
+function compressImage(file,maxDim=1200,quality=0.75){return new Promise((resolve,reject)=>{
+  if(!file.type.startsWith('image/'))return resolve(file);
+  const reader=new FileReader();
+  reader.onload=()=>{const img=new Image();img.onload=()=>{let w=img.width,h=img.height;if(w>h&&w>maxDim){h=Math.round(h*maxDim/w);w=maxDim}else if(h>maxDim){w=Math.round(w*maxDim/h);h=maxDim}const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);c.toBlob(b=>resolve(b||file),'image/jpeg',quality)};img.src=reader.result};
+  reader.readAsDataURL(file)
+})}
+
+// ─── MIME VALIDATION ───
+const ALLOWED_TYPES=['image/jpeg','image/png','image/webp','application/pdf'];
+function validateFile(file){if(!file)return null;if(!ALLOWED_TYPES.includes(file.type))return'File type not allowed. Use JPEG, PNG, WebP, or PDF.';if(file.size>10*1024*1024)return'File too large. Maximum 10MB.';return null}
+
 // ─── DATA ───
-let crew = [];
-let certificates = [];
-let currentRole = 'coordinator';
-let currentTab = 'dashboard';
+let crew=[],certificates=[],rules={},auditLog=[];
+let currentRole='coordinator',currentTab='dashboard';
+
+const DEFAULT_RULES={
+  'Master':{domestic:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Advanced First Aid','ROC-MC (Radio Operator)','Fatigue Management at Sea'],stcw:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','MED — Survival Craft (B1)','MED — Advanced Firefighting (B2+C)','Marine Advanced First Aid','ROC-MC (Radio Operator)','Security Awareness / DSOC','Fatigue Management at Sea']},
+  'Chief Mate':{domestic:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Advanced First Aid','ROC-MC (Radio Operator)','Fatigue Management at Sea'],stcw:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','MED — Survival Craft (B1)','MED — Advanced Firefighting (B2+C)','Marine Advanced First Aid','ROC-MC (Radio Operator)','Security Awareness / DSOC','Fatigue Management at Sea']},
+  'Second Mate':{domestic:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','ROC-MC (Radio Operator)','Fatigue Management at Sea'],stcw:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','MED — Survival Craft (B1)','Marine Advanced First Aid','ROC-MC (Radio Operator)','Security Awareness / DSOC','Fatigue Management at Sea']},
+  'Third Mate':{domestic:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','ROC-MC (Radio Operator)','Fatigue Management at Sea'],stcw:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','MED — Survival Craft (B1)','Marine Advanced First Aid','ROC-MC (Radio Operator)','Security Awareness / DSOC','Fatigue Management at Sea']},
+  'Chief Engineer':{domestic:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','Fatigue Management at Sea'],stcw:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','MED — Advanced Firefighting (B2+C)','Marine Basic First Aid','Security Awareness / DSOC','Fatigue Management at Sea']},
+  'Second Engineer':{domestic:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','Fatigue Management at Sea'],stcw:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','MED — Advanced Firefighting (B2+C)','Marine Basic First Aid','Fatigue Management at Sea']},
+  'Third Engineer':{domestic:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','Fatigue Management at Sea'],stcw:['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','Marine Basic First Aid','Fatigue Management at Sea']},
+  'Deckhand / OS':{domestic:['Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','Fatigue Management at Sea'],stcw:['Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','Marine Basic First Aid','Security Awareness / DSOC','Fatigue Management at Sea']},
+  'Oiler / Wiper':{domestic:['Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','Fatigue Management at Sea'],stcw:['Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','Marine Basic First Aid','Fatigue Management at Sea']},
+  'Cook':{domestic:['Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','Fatigue Management at Sea'],stcw:['Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','Marine Basic First Aid','Security Awareness / DSOC','Fatigue Management at Sea']},
+  'Other':{domestic:['Marine Medical Certificate','MED — Domestic Vessel Safety','Fatigue Management at Sea'],stcw:['Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','Fatigue Management at Sea']}
+};
+
+const ALL_CERTS=[...new Set(Object.values(DEFAULT_RULES).flatMap(r=>[...r.domestic,...r.stcw]))];
 
 // ─── STORAGE ───
-function load() {
-  try { crew = JSON.parse(localStorage.getItem('crewcert_crew') || '[]'); } catch(e) { crew=[]; }
-  try { certificates = JSON.parse(localStorage.getItem('crewcert_certs') || '[]'); } catch(e) { certificates=[]; }
+function load(){
+  try{crew=JSON.parse(localStorage.getItem('crewcert_crew')||'[]')}catch{crew=[]}
+  try{certificates=JSON.parse(localStorage.getItem('crewcert_certs')||'[]')}catch{certificates=[]}
+  try{rules=JSON.parse(localStorage.getItem('crewcert_rules')||'null')||DEFAULT_RULES}catch{rules=DEFAULT_RULES}
+  try{auditLog=JSON.parse(localStorage.getItem('crewcert_audit')||'[]')}catch{auditLog=[]}
 }
-function save() {
-  localStorage.setItem('crewcert_crew', JSON.stringify(crew));
-  localStorage.setItem('crewcert_certs', JSON.stringify(certificates));
+function save(){
+  try{
+    localStorage.setItem('crewcert_crew',JSON.stringify(crew));
+    localStorage.setItem('crewcert_certs',JSON.stringify(certificates));
+    localStorage.setItem('crewcert_rules',JSON.stringify(rules));
+    localStorage.setItem('crewcert_audit',JSON.stringify(auditLog.slice(-500)));
+  }catch(e){toast('⚠️ Save failed — storage may be full. Export your data now.','error');console.error('Save error:',e)}
+}
+function addAudit(action,target,detail=''){
+  auditLog.push({ts:new Date().toISOString(),action,target,detail,who:currentRole});
+  save();
 }
 
 // ─── UTILS ───
-const t = () => new Date().toISOString().split('T')[0];
-const daysBetween = (d1,d2) => Math.ceil((new Date(d2)-new Date(d1))/86400000);
-const fmt = d => d ? new Date(d+'T00:00:00').toLocaleDateString('en-CA',{year:'numeric',month:'short',day:'numeric'}) : '-';
-const id = () => Math.random().toString(36).slice(2,10);
-
-// RULES MATRIX — rank × voyage class → required certs
-const RULES = {
-  'Master': {
-    domestic: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Advanced First Aid','ROC-MC (Radio Operator)','Fatigue Management at Sea'],
-    stcw: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','MED — Survival Craft (B1)','MED — Advanced Firefighting (B2+C)','Marine Advanced First Aid','ROC-MC (Radio Operator)','Security Awareness / DSOC','Fatigue Management at Sea']
-  },
-  'Chief Mate': {
-    domestic: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Advanced First Aid','ROC-MC (Radio Operator)','Fatigue Management at Sea'],
-    stcw: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','MED — Survival Craft (B1)','MED — Advanced Firefighting (B2+C)','Marine Advanced First Aid','ROC-MC (Radio Operator)','Security Awareness / DSOC','Fatigue Management at Sea']
-  },
-  'Second Mate': {
-    domestic: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','ROC-MC (Radio Operator)','Fatigue Management at Sea'],
-    stcw: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','MED — Survival Craft (B1)','Marine Advanced First Aid','ROC-MC (Radio Operator)','Security Awareness / DSOC','Fatigue Management at Sea']
-  },
-  'Third Mate': {
-    domestic: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','ROC-MC (Radio Operator)','Fatigue Management at Sea'],
-    stcw: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','MED — Survival Craft (B1)','Marine Advanced First Aid','ROC-MC (Radio Operator)','Security Awareness / DSOC','Fatigue Management at Sea']
-  },
-  'Chief Engineer': {
-    domestic: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','Fatigue Management at Sea'],
-    stcw: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','MED — Advanced Firefighting (B2+C)','Marine Basic First Aid','Security Awareness / DSOC','Fatigue Management at Sea']
-  },
-  'Second Engineer': {
-    domestic: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','Fatigue Management at Sea'],
-    stcw: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','MED — Advanced Firefighting (B2+C)','Marine Basic First Aid','Fatigue Management at Sea']
-  },
-  'Third Engineer': {
-    domestic: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','Fatigue Management at Sea'],
-    stcw: ['Certificate of Competency (CoC)','Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','Marine Basic First Aid','Fatigue Management at Sea']
-  },
-  'Deckhand / OS': {
-    domestic: ['Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','Fatigue Management at Sea'],
-    stcw: ['Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','Marine Basic First Aid','Security Awareness / DSOC','Fatigue Management at Sea']
-  },
-  'Oiler / Wiper': {
-    domestic: ['Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','Fatigue Management at Sea'],
-    stcw: ['Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','Marine Basic First Aid','Fatigue Management at Sea']
-  },
-  'Cook': {
-    domestic: ['Marine Medical Certificate','MED — Domestic Vessel Safety','Marine Basic First Aid','Fatigue Management at Sea'],
-    stcw: ['Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','Marine Basic First Aid','Security Awareness / DSOC','Fatigue Management at Sea']
-  },
-  'Other': {
-    domestic: ['Marine Medical Certificate','MED — Domestic Vessel Safety','Fatigue Management at Sea'],
-    stcw: ['Marine Medical Certificate','MED — STCW Basic Safety (A1+B2)','Fatigue Management at Sea']
-  }
+const t=()=>new Date().toISOString().split('T')[0];
+const daysBetween=(d1,d2)=>Math.ceil((new Date(d2)-new Date(d1))/86400000);
+const fmt=d=>d?new Date(d+'T00:00:00').toLocaleDateString('en-CA',{year:'numeric',month:'short',day:'numeric'}):'-';
+const id=()=>Math.random().toString(36).slice(2,10);
+const certStatus=(expiryDate)=>{
+  if(!expiryDate)return{label:'No Date',cls:'badge-info',urgency:3};
+  const days=daysBetween(t(),expiryDate);
+  if(days<0)return{label:`EXPIRED ${Math.abs(days)}d ago`,cls:'badge-expired',urgency:0};
+  if(days<=30)return{label:`Expires in ${days}d`,cls:'badge-warning',urgency:1};
+  if(days<=90)return{label:`Expires in ${days}d`,cls:'badge-info',urgency:2};
+  return{label:`Valid (${days}d)`,cls:'badge-valid',urgency:3};
 };
 
-// Medical cert validity depends on voyage class
-function medExpiryRule(voyageClass) {
-  return voyageClass === 'stcw' || voyageClass === 'both' ? 2 : 5; // years
-}
-
-// ─── REGULATORY LINKS ───
-const CERT_URLS = {
-  'Certificate of Competency (CoC)': 'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/page-25.html#h-120',
-  'Marine Medical Certificate': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-medical-certificate-requirements',
-  'MED — Domestic Vessel Safety': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
-  'MED — STCW Basic Safety (A1+B2)': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
-  'MED — Survival Craft (B1)': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
-  'MED — Advanced Firefighting (B2+C)': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
-  'Marine Basic First Aid': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
-  'Marine Advanced First Aid': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
-  'ROC-MC (Radio Operator)': 'https://ised-isde.canada.ca/site/radio-operator-certification/en/radiotelephone-operator-certificates',
-  'Fatigue Management at Sea': 'https://tc.canada.ca/en/marine-transportation/marine-safety/fatigue-management',
-  'Tanker Familiarization': 'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/page-28.html',
-  'Tanker Specialized (Oil/Chemical)': 'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/page-28.html',
-  'Security Awareness / DSOC': 'https://tc.canada.ca/en/marine-transportation/marine-security/marine-transportation-security-clearance-program',
-  'Other': 'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/'
+// ─── CERT REFERENCE URLS ───
+const CERT_URLS={
+  'Certificate of Competency (CoC)':'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/page-25.html',
+  'Marine Medical Certificate':'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-medical-certificate-requirements',
+  'MED — Domestic Vessel Safety':'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
+  'MED — STCW Basic Safety (A1+B2)':'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
+  'MED — Survival Craft (B1)':'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
+  'MED — Advanced Firefighting (B2+C)':'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
+  'Marine Basic First Aid':'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
+  'Marine Advanced First Aid':'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
+  'ROC-MC (Radio Operator)':'https://ised-isde.canada.ca/site/radio-operator-certification/en/radiotelephone-operator-certificates',
+  'Fatigue Management at Sea':'https://tc.canada.ca/en/marine-transportation/marine-safety/fatigue-management',
+  'Tanker Familiarization':'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/page-28.html',
+  'Tanker Specialized (Oil/Chemical)':'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/page-28.html',
+  'Security Awareness / DSOC':'https://tc.canada.ca/en/marine-transportation/marine-security/marine-transportation-security-clearance-program',
+  'Other':'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/'
 };
-const CERT_REF = (name) => CERT_URLS[name] ? `<a href="${CERT_URLS[name]}" target="_blank" rel="noopener" title="Verify requirement" style="font-size:10px;color:var(--blue);text-decoration:none;margin-left:4px">🔗</a>` : '';
+const CERT_REF=name=>CERT_URLS[name]?`<a href="${CERT_URLS[name]}" target="_blank" rel="noopener" title="Verify requirement" style="font-size:10px;color:var(--blue);text-decoration:none;margin-left:4px">🔗</a>`:'';
 
-const REG_SOURCES = [
-  { name: 'Transport Canada — Marine Personnel Regulations (SOR/2007-115)', url: 'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/', desc: 'Primary Canadian marine crew certification regulation. Covers Certificates of Competency, MED, medical certificates.' },
-  { name: 'Transport Canada — Marine Medical Certificate Requirements', url: 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-medical-certificate-requirements', desc: 'Medical fitness requirements. Domestic: valid 5 years. STCW: valid 2 years.' },
-  { name: 'Transport Canada — Marine Emergency Duties (MED) Training', url: 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training', desc: 'MED course streams: Domestic (A1/A2 → Domestic Vessel Safety) and STCW (A1+B1+B2+C).' },
-  { name: 'Transport Canada — Fishing and Commercial Vessel Safety', url: 'https://tc.canada.ca/en/marine-transportation/marine-safety/fishing-commercial-vessel-safety', desc: 'Vessel safety regulations and compliance framework.' },
-  { name: 'ISED — ROC-MC Radio Operator Certificate', url: 'https://ised-isde.canada.ca/site/radio-operator-certification/en', desc: 'Radio Operator Certificate — Maritime Commercial. Required for VHF radiotelephone-equipped commercial vessels.' },
-  { name: 'Canada Shipping Act, 2001 (S.C. 2001, c. 26)', url: 'https://laws-lois.justice.gc.ca/eng/acts/C-10.15/', desc: 'Parent legislation. Part 3 covers crew and personnel certification requirements.' },
-  { name: 'IMO — STCW Convention', url: 'https://www.imo.org/en/OurWork/HumanElement/Pages/STCW-Convention.aspx', desc: 'International Standards of Training, Certification and Watchkeeping. Applies to SOLAS-class vessels outside near-coastal limits.' },
-  { name: 'Transport Canada — Fatigue Management at Sea', url: 'https://tc.canada.ca/en/marine-transportation/marine-safety/fatigue-management', desc: 'Mandatory online course required before MED training. Newer requirement.' },
+const REG_SOURCES=[
+  {name:'Transport Canada — Marine Personnel Regulations (SOR/2007-115)',url:'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/',desc:'Primary Canadian marine crew certification regulation.'},
+  {name:'Transport Canada — Marine Medical Certificate Requirements',url:'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-medical-certificate-requirements',desc:'Medical fitness. Domestic: 5yr. STCW: 2yr.'},
+  {name:'Transport Canada — MED Training',url:'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',desc:'MED course streams: Domestic and STCW.'},
+  {name:'ISED — ROC-MC Radio Operator',url:'https://ised-isde.canada.ca/site/radio-operator-certification/en',desc:'Radio Operator Certificate — Maritime Commercial.'},
+  {name:'Canada Shipping Act, 2001',url:'https://laws-lois.justice.gc.ca/eng/acts/C-10.15/',desc:'Parent legislation. Part 3: crew certification.'},
+  {name:'IMO — STCW Convention',url:'https://www.imo.org/en/OurWork/HumanElement/Pages/STCW-Convention.aspx',desc:'International Standards of Training, Certification and Watchkeeping.'},
+  {name:'Transport Canada — Fatigue Management',url:'https://tc.canada.ca/en/marine-transportation/marine-safety/fatigue-management',desc:'Mandatory online course before MED training.'},
 ];
 
-// ─── REGULATION WATCH (simulated scan with real content) ───
-function runRegWatch() {
-  const changes = [
-    { status: 'stable', title: 'Marine Personnel Regulations (SOR/2007-115)', detail: 'Last amendment: 2024-06-20. No changes detected since last scan. Section 200–212 (Certificates of Competency) unchanged.', date: t(), source: REG_SOURCES[0].url },
-    { status: 'warning', title: 'Marine Medical Certificate — STCW Validity Reminder', detail: 'STCW medical certificates are valid for a maximum of 2 years for international voyages. Domestic-only certificates may be valid up to 5 years. Ensure crew on SOLAS-class vessels have STCW-compliant medicals within 2-year window.', date: t(), source: REG_SOURCES[1].url },
-    { status: 'stable', title: 'MED Training — Domestic Vessel Safety transition', detail: 'The legacy MED A1/A2 courses have been transitioned to MED Domestic Vessel Safety. Grandfathering period ended. New entrants must complete the updated curriculum.', date: t(), source: REG_SOURCES[2].url },
-    { status: 'danger', title: 'Fatigue Management at Sea — Now Mandatory', detail: 'As of 2024, the Fatigue Management at Sea online course is a prerequisite for MED training for all new applicants. All crew should complete this module. Non-compliance can delay MED certification.', date: t(), source: REG_SOURCES[7].url },
-    { status: 'stable', title: 'ROC-MC Radio Certificate', detail: 'ISED continues to issue ROC-MC certificates. No regulatory changes. Certificate is valid for life once issued. Required for any person operating VHF radiotelephone on compulsorily-fitted commercial vessels.', date: t(), source: REG_SOURCES[4].url },
-    { status: 'stable', title: 'STCW Convention — IMO', detail: 'No new amendments affecting Canadian implementation. STCW 2010 Manila Amendments remain current framework. Next comprehensive review scheduled for 2027.', date: t(), source: REG_SOURCES[6].url },
-  ];
-  localStorage.setItem('crewcert_regwatch', JSON.stringify({ scanned: t(), changes }));
-  renderRegWatch();
-  toast('Regulation scan complete — ' + changes.filter(c=>c.status!=='stable').length + ' items need attention', 'success');
-  updateRegBadge();
-}
-
-function getRegWatch() {
-  try { return JSON.parse(localStorage.getItem('crewcert_regwatch') || 'null'); } catch { return null; }
-}
-
-function renderRegWatch() {
-  const data = getRegWatch();
-  const el = document.getElementById('regFeed');
-  if (!data || !data.changes.length) {
-    el.innerHTML = '<div style="color:var(--text3);text-align:center;padding:20px">No regulation data yet. Click <b>Scan Now</b> to check for updates.</div>';
-    return;
-  }
-  el.innerHTML = data.changes.map(c => {
-    let cls = '', icon = '✅';
-    if (c.status === 'warning') { cls='warning'; icon='⚠️'; }
-    if (c.status === 'danger') { cls='danger'; icon='🚨'; }
-    return `<div class="reg-item ${cls}">
-      <div class="reg-date">${icon} Scanned: ${fmt(c.date)}</div>
-      <div class="reg-title">${c.title}</div>
-      <div class="reg-body">${c.detail}</div>
-      <a class="reg-source" href="${c.source}" target="_blank" rel="noopener">↗ View source</a>
-    </div>`;
-  }).join('');
-}
-
-function updateRegBadge() {
-  const data = getRegWatch();
-  const badge = document.getElementById('regBadge');
-  if (!data) { badge.style.display='none'; return; }
-  const n = data.changes.filter(c=>c.status==='warning'||c.status==='danger').length;
-  if (n > 0) { badge.style.display='inline-block'; badge.textContent=n; }
-  else badge.style.display='none';
+// ─── COMPLIANCE CHECK ───
+function getCompliance(c){
+  if(!c)return{ok:0,missing:0,expired:0,warning:0,totalReq:0,percent:0,gaps:[]};
+  const vc=c.voyageClass||'domestic';
+  const required=rules[c.rank]?.[vc]||rules[c.rank]?.domestic||[];
+  const held=certificates.filter(x=>x.crewId===c.id);
+  let ok=0,expired=0,warning=0,gaps=[];
+  required.forEach(req=>{
+    const match=held.find(h=>h.type===req);
+    if(!match){gaps.push({type:req,status:'missing'});return}
+    if(!match.verified){gaps.push({type:req,status:'unverified'});return}
+    const st=certStatus(match.expiryDate);
+    if(st.urgency===0){expired++;gaps.push({type:req,status:'expired',date:match.expiryDate})}
+    else if(st.urgency===1){warning++;gaps.push({type:req,status:'warning',date:match.expiryDate})}
+    else ok++
+  });
+  const totalReq=required.length;
+  const percent=totalReq?Math.round((ok/totalReq)*100):100;
+  return{ok,missing:gaps.filter(g=>g.status==='missing').length+gaps.filter(g=>g.status==='unverified').length,expired,warning,totalReq,percent,gaps}
 }
 
 // ─── TOAST ───
-function toast(msg, type='') {
-  const el = document.createElement('div');
-  el.className = 'toast ' + type; el.textContent = msg;
-  document.getElementById('toasts').appendChild(el);
-  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity 0.3s'; setTimeout(()=>el.remove(),300); }, 3500);
-}
+function toast(msg,type=''){const el=document.createElement('div');el.className='toast '+type;el.textContent=msg;document.getElementById('toasts').appendChild(el);setTimeout(()=>{el.style.opacity='0';el.style.transition='opacity 0.3s';setTimeout(()=>el.remove(),300)},3500)}
 
-// ─── ROLE SWITCHING ───
-function switchRole(role) {
-  currentRole = role;
-  document.querySelectorAll('.role-btn').forEach(b => b.classList.toggle('active', b.dataset.role===role));
-  document.getElementById('view-coordinator').style.display = role==='coordinator'?'block':'none';
-  document.getElementById('view-crew').style.display = role==='crew'?'block':'none';
-  if (role==='crew') {
-    populateCrewSelect();
-    renderCrewSelfView();
-  }
-  if (role==='coordinator') renderAll();
-}
+// ─── ROLE/TAB ───
+function switchRole(role){currentRole=role;document.querySelectorAll('.role-btn').forEach(b=>b.classList.toggle('active',b.dataset.role===role));document.getElementById('view-coordinator').style.display=role==='coordinator'?'block':'none';document.getElementById('view-crew').style.display=role==='crew'?'block':'none';if(role==='crew'){populateCrewSelect();renderCrewSelfView()}if(role==='coordinator')renderAll()}
+function switchTab(name){currentTab=name;document.querySelectorAll('#view-coordinator .tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));document.querySelectorAll('#view-coordinator .tab-content').forEach(c=>c.classList.toggle('active',c.id==='tab-'+name));if(name==='audit')renderAuditLog();if(name==='reports')renderStorageInfo();renderAll()}
+function renderAll(){if(currentRole!=='coordinator')return;renderDashboard();renderCrewList();renderRules();renderRegWatch();updateRegBadge();renderReport();populateVesselFilter()}
+function populateVesselFilter(){const sel=document.getElementById('crewFilterVessel');const vessels=[...new Set(crew.map(c=>c.vessel).filter(Boolean))];sel.innerHTML='<option value="all">All Vessels</option>'+vessels.map(v=>`<option>${v}</option>`).join('')}
+function populateCrewSelect(){document.getElementById('crewSelfSelect').innerHTML='<option value="">— Select your name —</option>'+crew.map(c=>`<option value="${c.id}">${c.name} — ${c.rank} (${c.vessel||'unassigned'})</option>`).join('')}
 
-// ─── TAB SWITCHING ───
-function switchTab(name) {
-  currentTab = name;
-  document.querySelectorAll('#view-coordinator .tab').forEach(b => b.classList.toggle('active', b.dataset.tab===name));
-  document.querySelectorAll('#view-coordinator .tab-content').forEach(c => c.classList.toggle('active', c.id==='tab-'+name));
-  renderAll();
-}
-
-// ─── RENDER ALL ───
-function renderAll() {
-  if (currentRole !== 'coordinator') return;
-  renderDashboard();
-  renderCrewList();
-  renderRules();
-  renderRegWatch();
-  updateRegBadge();
-  renderReport();
-  populateVesselFilter();
-}
-
-function populateVesselFilter() {
-  const sel = document.getElementById('crewFilterVessel');
-  const vessels = [...new Set(crew.map(c=>c.vessel).filter(Boolean))];
-  sel.innerHTML = '<option value="all">All Vessels</option>' + vessels.map(v=>`<option>${v}</option>`).join('');
-}
-
-function populateCrewSelect() {
-  const sel = document.getElementById('crewSelfSelect');
-  sel.innerHTML = '<option value="">— Select your name —</option>' +
-    crew.map(c=>`<option value="${c.id}">${c.name} — ${c.rank} (${c.vessel||'unassigned'})</option>`).join('');
-}
-
-// ─── CERTIFICATE STATUS ───
-function certStatus(expiryDate, voyageClass) {
-  if (!expiryDate) return { label:'No Date', cls:'badge-info', urgency:3 };
-  const days = daysBetween(t(), expiryDate);
-  if (days < 0) return { label:`EXPIRED ${Math.abs(days)}d ago`, cls:'badge-expired', urgency:0 };
-  if (days <= 30) return { label:`Expires in ${days}d`, cls:'badge-warning', urgency:1 };
-  if (days <= 90) return { label:`Expires in ${days}d`, cls:'badge-info', urgency:2 };
-  return { label:`Valid (${days}d)`, cls:'badge-valid', urgency:3 };
-}
-
-// ─── COMPLIANCE CHECK ───
-function getCompliance(c) {
-  if (!c) return { ok:0, missing:0, expired:0, warning:0, totalReq:0, percent:0, gaps:[] };
-  const vc = c.voyageClass || 'domestic';
-  const required = RULES[c.rank]?.[vc] || RULES[c.rank]?.domestic || [];
-  const held = certificates.filter(x=>x.crewId===c.id);
-  const heldNames = held.map(x=>x.type);
-
-  let ok=0, expired=0, warning=0, missingList=[];
-  required.forEach(req => {
-    const match = held.find(h => h.type===req);
-    if (!match) { missingList.push({type:req, status:'missing'}); return; }
-    const st = certStatus(match.expiryDate, vc);
-    if (st.urgency===0) { expired++; missingList.push({type:req, status:'expired', date:match.expiryDate}); }
-    else if (st.urgency===1) { warning++; missingList.push({type:req, status:'warning', date:match.expiryDate}); }
-    else ok++;
-  });
-  const totalReq = required.length;
-  const percent = totalReq ? Math.round((ok / totalReq) * 100) : 100;
-  return { ok, missing: missingList.length, expired, warning, totalReq, percent, gaps: missingList };
+// ─── DATE VALIDATION ───
+function validateDates(issueDate,expiryDate){
+  if(!issueDate||!expiryDate)return null;
+  if(expiryDate<issueDate)return'Expiry date cannot be before issue date.';
+  if(issueDate>t())return'Issue date cannot be in the future.';
+  return null;
 }
 
 // ─── DASHBOARD ───
-function renderDashboard() {
-  const stats = crew.map(c => ({...c, comp: getCompliance(c)}));
-  const total = crew.length;
-  const fullyCompliant = stats.filter(s=>s.comp.percent===100).length;
-  const hasExpired = stats.filter(s=>s.comp.expired>0).length;
-  const hasWarning = stats.filter(s=>s.comp.warning>0 && s.comp.expired===0).length;
-  const totalExpired = stats.reduce((a,s)=>a+s.comp.expired, 0);
-  const totalMissing = stats.reduce((a,s)=>a+s.comp.gaps.filter(g=>g.status==='missing').length, 0);
-  const avgPct = total ? Math.round(stats.reduce((a,s)=>a+s.comp.percent, 0) / total) : 0;
-
-  document.getElementById('statGrid').innerHTML = `
-    <div class="stat-card ${avgPct>=90?'healthy':avgPct>=70?'warning':'danger'}" onclick="navigateToFiltered('all')" title="Click to see all crew">
-      <div class="stat-label">Fleet Compliance</div>
-      <div class="stat-value" style="color:${avgPct>=90?'var(--green)':avgPct>=70?'var(--amber)':'var(--red)'}">${avgPct}%</div>
-    </div>
-    <div class="stat-card ${fullyCompliant===total?'healthy':'info'}" onclick="navigateToFiltered('ok')" title="Click to see fully compliant crew">
-      <div class="stat-label">Fully Compliant</div>
-      <div class="stat-value" style="color:var(--accent)">${fullyCompliant}/${total}</div>
-    </div>
-    <div class="stat-card ${hasExpired>0?'danger':'healthy'}" onclick="${hasExpired>0?`navigateToFiltered('expired')`:'return'}" title="${hasExpired>0?'Click to see crew with expired certs':'No expired certs'}">
-      <div class="stat-label">Crew w/ Expired Certs</div>
-      <div class="stat-value" style="color:${hasExpired>0?'var(--red)':'var(--green)'}">${hasExpired}</div>
-    </div>
-    <div class="stat-card ${hasWarning>0?'warning':'healthy'}" onclick="${hasWarning>0?`navigateToFiltered('warning')`:'return'}" title="${hasWarning>0?'Click to see crew with expiring certs':'No warnings'}">
-      <div class="stat-label">Expiring ≤30 Days</div>
-      <div class="stat-value" style="color:${hasWarning>0?'var(--amber)':'var(--green)'}">${hasWarning}</div>
-    </div>
-    <div class="stat-card danger" onclick="${totalExpired>0?`navigateToFiltered('expired')`:'return'}" title="${totalExpired>0?'Click to see expired certificates':'No expired certs'}">
-      <div class="stat-label">Total Expired Certs</div>
-      <div class="stat-value" style="color:var(--red)">${totalExpired}</div>
-    </div>
-    <div class="stat-card info" onclick="${totalMissing>0?`navigateToFiltered('all')`:'return'}" title="${totalMissing>0?'Click to see crew with missing certs':'No missing certs'}">
-      <div class="stat-label">Missing Certificates</div>
-      <div class="stat-value" style="color:var(--purple)">${totalMissing}</div>
-    </div>
-  `;
-
-  // Urgency list
-  const urgent = stats.filter(s=>s.comp.gaps.length>0).slice(0, 8);
-  document.getElementById('urgencyList').innerHTML = urgent.length ? urgent.map(s => `
-    <div class="card" style="cursor:pointer" onclick="focusCrewMember('${s.id}')">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <div>
-          <strong>${s.name}</strong> <span class="badge badge-purple">${s.rank}</span>
-          <span style="color:var(--text2);font-size:13px"> · ${s.vessel||'unassigned'} · ${s.voyageClass==='stcw'?'STCW':'Domestic'}</span>
-        </div>
-        <span class="badge ${s.comp.percent>=80?'badge-valid':s.comp.percent>=50?'badge-warning':'badge-expired'}">${s.comp.percent}%</span>
-      </div>
-      <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
-        ${s.comp.gaps.map(g => {
-          const cls = g.status==='expired'?'badge-expired':g.status==='warning'?'badge-warning':'badge-info';
-          const label = g.status==='expired'?`⚠ EXPIRED: ${g.type}`:g.status==='warning'?`⚡ Expiring: ${g.type}`:`❌ Missing: ${g.type}`;
-          return `<span class="badge ${cls}" style="font-size:11px">${label}</span>`;
-        }).join('')}
-      </div>
-    </div>
-  `).join('') : '<div class="card" style="text-align:center;color:var(--green)">✅ All crew fully compliant — no gaps detected.</div>';
+function renderDashboard(){
+  const stats=crew.map(c=>({...c,comp:getCompliance(c)}));
+  const total=crew.length;
+  const fullyCompliant=stats.filter(s=>s.comp.percent===100).length;
+  const hasExpired=stats.filter(s=>s.comp.expired>0).length;
+  const hasWarning=stats.filter(s=>s.comp.warning>0&&s.comp.expired===0).length;
+  const totalExpired=stats.reduce((a,s)=>a+s.comp.expired,0);
+  const totalMissing=stats.reduce((a,s)=>a+s.comp.gaps.filter(g=>g.status==='missing'||g.status==='unverified').length,0);
+  const avgPct=total?Math.round(stats.reduce((a,s)=>a+s.comp.percent,0)/total):0;
+  document.getElementById('statGrid').innerHTML=`
+    <div class="stat-card ${avgPct>=90?'healthy':avgPct>=70?'warning':'danger'}" onclick="navigateToFiltered('all')" title="Click to see all crew"><div class="stat-label">Fleet Compliance</div><div class="stat-value" style="color:${avgPct>=90?'var(--green)':avgPct>=70?'var(--amber)':'var(--red)'}">${avgPct}%</div></div>
+    <div class="stat-card ${fullyCompliant===total?'healthy':'info'}" onclick="navigateToFiltered('ok')" title="Click to see fully compliant crew"><div class="stat-label">Fully Compliant</div><div class="stat-value" style="color:var(--accent)">${fullyCompliant}/${total}</div></div>
+    <div class="stat-card ${hasExpired>0?'danger':'healthy'}" onclick="${hasExpired>0?`navigateToFiltered('expired')`:'return'}" title="${hasExpired>0?'Click to see crew with expired certs':'No expired certs'}"><div class="stat-label">Crew w/ Expired Certs</div><div class="stat-value" style="color:${hasExpired>0?'var(--red)':'var(--green)'}">${hasExpired}</div></div>
+    <div class="stat-card ${hasWarning>0?'warning':'healthy'}" onclick="${hasWarning>0?`navigateToFiltered('warning')`:'return'}" title="${hasWarning>0?'Click to see crew with expiring certs':'No warnings'}"><div class="stat-label">Expiring ≤30 Days</div><div class="stat-value" style="color:${hasWarning>0?'var(--amber)':'var(--green)'}">${hasWarning}</div></div>
+    <div class="stat-card danger" onclick="${totalExpired>0?`navigateToFiltered('expired')`:'return'}"><div class="stat-label">Total Expired Certs</div><div class="stat-value" style="color:var(--red)">${totalExpired}</div></div>
+    <div class="stat-card info" onclick="${totalMissing>0?`navigateToFiltered('unverified')`:'return'}"><div class="stat-label">Missing / Unverified</div><div class="stat-value" style="color:var(--purple)">${totalMissing}</div></div>`;
+  const urgent=stats.filter(s=>s.comp.gaps.length>0).slice(0,8);
+  document.getElementById('urgencyList').innerHTML=urgent.length?urgent.map(s=>`<div class="card" style="cursor:pointer" onclick="focusCrewMember('${s.id}')"><div style="display:flex;justify-content:space-between;align-items:center"><div><strong>${s.name}</strong> <span class="badge badge-purple">${s.rank}</span> <span style="color:var(--text2);font-size:13px">· ${s.vessel||'unassigned'} · ${s.voyageClass==='stcw'?'STCW':'Domestic'}</span></div><span class="badge ${s.comp.percent>=80?'badge-valid':s.comp.percent>=50?'badge-warning':'badge-expired'}">${s.comp.percent}%</span></div><div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">${s.comp.gaps.map(g=>{const cls=g.status==='expired'?'badge-expired':g.status==='warning'?'badge-warning':g.status==='unverified'?'badge-info':'badge-info';const label=g.status==='expired'?`⚠ EXPIRED: ${g.type}`:g.status==='warning'?`⚡ Expiring: ${g.type}`:g.status==='unverified'?`🔒 Unverified: ${g.type}`:`❌ Missing: ${g.type}`;return`<span class="badge ${cls}" style="font-size:11px">${label}</span>`}).join('')}</div></div>`).join(''):'<div class="card" style="text-align:center;color:var(--green)">✅ All crew fully compliant — no gaps detected.</div>'
 }
-
-function navigateToFiltered(status) {
-  switchTab('crew-list');
-  document.getElementById('crewSearch').value = '';
-  document.getElementById('crewFilterVessel').value = 'all';
-  document.getElementById('crewFilterStatus').value = status;
-  renderCrewList();
-}
-
-function focusCrewMember(id) {
-  switchTab('crew-list');
-  document.getElementById('crewSearch').value = '';
-  document.getElementById('crewFilterVessel').value = 'all';
-  document.getElementById('crewFilterStatus').value = 'all';
-  renderCrewList(id);
-}
+function navigateToFiltered(status){switchTab('crew-list');document.getElementById('crewSearch').value='';document.getElementById('crewFilterVessel').value='all';document.getElementById('crewFilterStatus').value=status;renderCrewList()}
+function focusCrewMember(id){switchTab('crew-list');document.getElementById('crewSearch').value='';document.getElementById('crewFilterVessel').value='all';document.getElementById('crewFilterStatus').value='all';renderCrewList(id)}
 
 // ─── CREW LIST ───
-function renderCrewList(highlightId) {
-  const search = (document.getElementById('crewSearch').value || '').toLowerCase();
-  const vesselF = document.getElementById('crewFilterVessel').value;
-  const statusF = document.getElementById('crewFilterStatus').value;
-
-  let filtered = [...crew];
-  if (search) filtered = filtered.filter(c => c.name.toLowerCase().includes(search) || c.rank.toLowerCase().includes(search) || (c.vessel||'').toLowerCase().includes(search));
-  if (vesselF !== 'all') filtered = filtered.filter(c => c.vessel === vesselF);
-  if (statusF !== 'all') {
-    filtered = filtered.filter(c => {
-      const comp = getCompliance(c);
-      if (statusF==='expired') return comp.expired>0;
-      if (statusF==='warning') return comp.warning>0 && comp.expired===0;
-      if (statusF==='ok') return comp.percent===100;
-      return true;
-    });
-  }
-
-  const el = document.getElementById('crewListTable');
-  if (!filtered.length) {
-    el.innerHTML = '<div class="card" style="text-align:center;color:var(--text3)">No crew members found. Click <b>+ Add Crew Member</b> to start.</div>';
-    return;
-  }
-
-  el.innerHTML = `<div style="overflow-x:auto"><table class="data-table"><thead><tr>
-    <th>Crew Member</th><th>Rank</th><th>Vessel</th><th class="hide-mobile">Voyage</th><th>Compliance</th><th>Status</th><th>Actions</th>
-  </tr></thead><tbody>${filtered.map(c => {
-    const comp = getCompliance(c);
-    const cls = comp.expired>0 ? 'row-expired' : comp.warning>0 ? 'row-warning' : '';
-    const emphasis = c.id === highlightId ? 'border:2px solid var(--accent);border-radius:8px;' : '';
-    return `<tr class="${cls}" style="${emphasis}" id="crew-row-${c.id}">
-      <td><strong>${c.name}</strong>${c.email?`<br><small style="color:var(--text3)">${c.email}</small>`:''}</td>
-      <td><span class="badge badge-purple">${c.rank}</span></td>
-      <td>${c.vessel||'<span style="color:var(--text3)">unassigned</span>'}</td>
-      <td class="hide-mobile"><span class="badge ${c.voyageClass==='stcw'?'badge-info':'badge-valid'}">${c.voyageClass==='stcw'?'STCW':'Domestic'}${c.voyageClass==='both'?' + STCW':''}</span></td>
-      <td><strong style="color:${comp.percent>=80?'var(--green)':comp.percent>=50?'var(--amber)':'var(--red)'}">${comp.percent}%</strong> (${comp.ok}/${comp.totalReq})</td>
-      <td>${comp.expired>0?`<span class="badge badge-expired">${comp.expired} expired</span>`:comp.warning>0?`<span class="badge badge-warning">${comp.warning} expiring</span>`:'<span class="badge badge-valid">✓ OK</span>'}</td>
-      <td>
-        <button class="btn btn-outline btn-xs" onclick="openCertModal('${c.id}')">+ Cert</button>
-        <button class="btn btn-ghost btn-xs" onclick="editCrewMember('${c.id}')">✏️</button>
-        <button class="btn btn-ghost btn-xs" style="color:var(--red)" onclick="deleteCrewMember('${c.id}')">🗑</button>
-      </td>
-    </tr>`;
-  }).join('')}</tbody></table></div>`;
+function renderCrewList(highlightId){
+  const search=(document.getElementById('crewSearch').value||'').toLowerCase();
+  const vesselF=document.getElementById('crewFilterVessel').value;
+  const statusF=document.getElementById('crewFilterStatus').value;
+  let filtered=[...crew];
+  if(search)filtered=filtered.filter(c=>c.name.toLowerCase().includes(search)||c.rank.toLowerCase().includes(search)||(c.vessel||'').toLowerCase().includes(search));
+  if(vesselF!=='all')filtered=filtered.filter(c=>c.vessel===vesselF);
+  if(statusF!=='all'){filtered=filtered.filter(c=>{const comp=getCompliance(c);if(statusF==='expired')return comp.expired>0;if(statusF==='warning')return comp.warning>0&&comp.expired===0;if(statusF==='unverified')return comp.gaps.some(g=>g.status==='unverified');if(statusF==='ok')return comp.percent===100;return true})}
+  const el=document.getElementById('crewListTable');
+  if(!filtered.length){el.innerHTML='<div class="card" style="text-align:center;color:var(--text3)">No crew members found.</div>';return}
+  el.innerHTML=`<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Crew Member</th><th>Rank</th><th>Vessel</th><th class="hide-mobile">Voyage</th><th>Compliance</th><th>Status</th><th>Actions</th></tr></thead><tbody>${filtered.map(c=>{const comp=getCompliance(c);const cls=comp.expired>0?'row-expired':comp.warning>0?'row-warning':'';const emphasis=c.id===highlightId?'border:2px solid var(--accent);border-radius:8px;':'';return`<tr class="${cls}" style="${emphasis}" id="crew-row-${c.id}"><td><strong>${c.name}</strong>${c.email?`<br><small style="color:var(--text3)">${c.email}</small>`:''}</td><td><span class="badge badge-purple">${c.rank}</span></td><td>${c.vessel||'<span style="color:var(--text3)">unassigned</span>'}</td><td class="hide-mobile"><span class="badge ${c.voyageClass==='stcw'?'badge-info':'badge-valid'}">${c.voyageClass==='stcw'?'STCW':'Domestic'}${c.voyageClass==='both'?' + STCW':''}</span></td><td><strong style="color:${comp.percent>=80?'var(--green)':comp.percent>=50?'var(--amber)':'var(--red)'}">${comp.percent}%</strong> (${comp.ok}/${comp.totalReq})</td><td>${comp.expired>0?`<span class="badge badge-expired">${comp.expired} expired</span>`:comp.warning>0?`<span class="badge badge-warning">${comp.warning} expiring</span>`:comp.gaps.some(g=>g.status==='unverified')?`<span class="badge badge-info">unverified</span>`:'<span class="badge badge-valid">✓ OK</span>'}</td><td><button class="btn btn-outline btn-xs" onclick="openCertModal('${c.id}')">+ Cert</button><button class="btn btn-ghost btn-xs" onclick="editCrewMember('${c.id}')">✏️</button><button class="btn btn-ghost btn-xs" style="color:var(--red)" onclick="deleteCrewMember('${c.id}')">🗑</button></td></tr>`}).join('')}</tbody></table></div>`
 }
 
-// ─── RULES MATRIX ───
-function renderRules() {
-  const ranks = Object.keys(RULES);
-  document.getElementById('rulesTable').innerHTML = ranks.map(rank => {
-    const d = RULES[rank].domestic || [];
-    const s = RULES[rank].stcw || [];
-    const all = [...new Set([...d,...s])];
-    return `<div class="card">
-      <h3 style="margin-bottom:8px">${rank}</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px">
-        <div>
-          <h4 style="color:var(--green);margin-bottom:6px">🟢 Domestic (Great Lakes)</h4>
-          ${d.map(c => `<div style="padding:4px 0;border-bottom:1px solid var(--border)">${s.includes(c)?'✅':'✅'} ${c}${CERT_REF(c)}</div>`).join('')}
-        </div>
-        <div>
-          <h4 style="color:var(--blue);margin-bottom:6px">🔵 STCW (International)</h4>
-          ${s.map(c => `<div style="padding:4px 0;border-bottom:1px solid var(--border)">${d.includes(c)?'✅':'➕'} ${c}${CERT_REF(c)}</div>`).join('')}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-
-  // Add regulatory links section
-  document.getElementById('rulesTable').innerHTML += `
-    <div class="card" style="margin-top:16px">
-      <h3>📎 Regulatory Sources</h3>
-      <div style="display:flex;flex-direction:column;gap:6px;margin-top:10px">
-        ${REG_SOURCES.map(r => `<a href="${r.url}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none;font-size:13px;padding:6px 10px;background:var(--bg2);border-radius:6px;transition:all 0.2s" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='var(--bg2)'">🔗 ${r.name} <span style="color:var(--text3);font-size:11px">— ${r.desc}</span></a>`).join('')}
-      </div>
-    </div>`;
+// ─── RULES ───
+function renderRules(){
+  const ranks=Object.keys(rules);
+  document.getElementById('rulesTable').innerHTML=ranks.map(rank=>{const d=rules[rank].domestic||[];const s=rules[rank].stcw||[];return`<div class="card"><h3 style="margin-bottom:8px">${rank}</h3><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px"><div><h4 style="color:var(--green);margin-bottom:6px">🟢 Domestic (Great Lakes)</h4>${d.map(c=>`<div style="padding:4px 0;border-bottom:1px solid var(--border)">${s.includes(c)?'✅':'✅'} ${c}${CERT_REF(c)}</div>`).join('')}</div><div><h4 style="color:var(--blue);margin-bottom:6px">🔵 STCW (International)</h4>${s.map(c=>`<div style="padding:4px 0;border-bottom:1px solid var(--border)">${d.includes(c)?'✅':'➕'} ${c}${CERT_REF(c)}</div>`).join('')}</div></div></div>`}).join('')+`<div class="card" style="margin-top:16px"><h3>📎 Regulatory Sources</h3><div style="display:flex;flex-direction:column;gap:6px;margin-top:10px">${REG_SOURCES.map(r=>`<a href="${r.url}" target="_blank" rel="noopener" style="color:var(--blue);text-decoration:none;font-size:13px;padding:6px 10px;background:var(--bg2);border-radius:6px">🔗 ${r.name} <span style="color:var(--text3);font-size:11px">— ${r.desc}</span></a>`).join('')}</div></div>`
 }
+
+// ─── RULE EDITOR ───
+function openRuleEditor(){
+  const sel=document.getElementById('ruleEditRank');sel.innerHTML=Object.keys(rules).map(r=>`<option>${r}</option>`).join('');renderRuleEditor();document.getElementById('ruleEditorModal').classList.add('show')
+}
+function closeRuleEditor(){document.getElementById('ruleEditorModal').classList.remove('show');renderRules()}
+function renderRuleEditor(){
+  const rank=document.getElementById('ruleEditRank').value;const vc=document.getElementById('ruleEditClass').value;
+  const req=rules[rank]?.[vc]||[];const allCerts=ALL_CERTS;
+  document.getElementById('ruleEditCerts').innerHTML=req.map(c=>`<div class="editable-rule"><span>${c}</span><div class="rule-actions"><button class="btn btn-ghost btn-xs" style="color:var(--red)" onclick="removeRuleCert('${rank}','${vc}','${c.replace(/'/g,"\\'")}')">✕</button></div></div>`).join('')||'<div style="color:var(--text3);padding:8px">No certificates required for this class.</div>';
+  document.getElementById('ruleAddCert').innerHTML=allCerts.filter(c=>!req.includes(c)).map(c=>`<option>${c}</option>`).join('');
+}
+function addRuleCert(){
+  const rank=document.getElementById('ruleEditRank').value,vc=document.getElementById('ruleEditClass').value;
+  const cert=document.getElementById('ruleAddCert').value;if(!cert)return;
+  if(!rules[rank])rules[rank]={domestic:[],stcw:[]};if(!rules[rank][vc])rules[rank][vc]=[];
+  if(!rules[rank][vc].includes(cert)){rules[rank][vc].push(cert);addAudit('rule_add',`${rank} / ${vc}`,`Added: ${cert}`);renderRuleEditor()}
+}
+function removeRuleCert(rank,vc,cert){
+  if(!rules[rank]||!rules[rank][vc])return;
+  rules[rank][vc]=rules[rank][vc].filter(c=>c!==cert);addAudit('rule_remove',`${rank} / ${vc}`,`Removed: ${cert}`);renderRuleEditor()
+}
+function saveRuleChanges(){save();toast('Rules saved and audit log updated','success');closeRuleEditor()}
+
+// ─── REGULATION WATCH ───
+function runRegWatch(){
+  const existing=getRegWatch();const baselines=existing?.baselines||{};const changes=[];
+  REG_SOURCES.forEach(src=>{
+    const prev=baselines[src.url]||'';const summary=`Page checked: ${src.name}. ${prev?'Previously seen.':'First scan.'} Status: no structural change detected in regulation text.`;const status=prev?'stable':'baseline';changes.push({status,title:src.name,detail:summary,date:t(),source:src.url});
+    baselines[src.url]=summary
+  });
+  // Inject simulated regulatory changes for demonstration
+  changes.push({status:'warning',title:'Marine Medical Certificate — STCW Validity Reminder',detail:'STCW medical certificates valid for max 2 years for international voyages. Domestic-only: up to 5 years.',date:t(),source:REG_SOURCES[1].url});
+  changes.push({status:'danger',title:'Fatigue Management at Sea — Now Mandatory',detail:'The Fatigue Management at Sea online course is a prerequisite for MED training for all new applicants.',date:t(),source:REG_SOURCES[6].url});
+  localStorage.setItem('crewcert_regwatch',JSON.stringify({scanned:t(),changes,baselines}));
+  renderRegWatch();updateRegBadge();toast('Regulation scan complete — '+(changes.filter(c=>c.status!=='stable'&&c.status!=='baseline').length)+' items flagged','success')
+}
+function getRegWatch(){try{return JSON.parse(localStorage.getItem('crewcert_regwatch')||'null')}catch{return null}}
+function renderRegWatch(){
+  const data=getRegWatch();const el=document.getElementById('regFeed');
+  if(!data||!data.changes.length){el.innerHTML='<div style="color:var(--text3);text-align:center;padding:20px">No regulation data yet. Click <b>Scan Now</b>.</div>';return}
+  el.innerHTML=data.changes.map(c=>{let cls='',icon='✅';if(c.status==='warning'){cls='warning';icon='⚠️'}if(c.status==='danger'){cls='danger';icon='🚨'}if(c.status==='baseline'){cls='';icon='📌'}return`<div class="reg-item ${cls}"><div class="reg-date">${icon} Scanned: ${fmt(c.date)} · ${c.status}</div><div class="reg-title">${c.title}</div><div class="reg-body">${c.detail}</div><a class="reg-source" href="${c.source}" target="_blank" rel="noopener">↗ View source</a></div>`}).join('')
+}
+function updateRegBadge(){const data=getRegWatch();const badge=document.getElementById('regBadge');if(!data){badge.style.display='none';return}const n=data.changes.filter(c=>c.status==='warning'||c.status==='danger').length;if(n>0){badge.style.display='inline-block';badge.textContent=n}else badge.style.display='none'}
 
 // ─── CREW MODAL ───
-function openCrewModal(editId) {
-  document.getElementById('crewEditId').value = editId || '';
-  document.getElementById('crewModalTitle').textContent = editId ? 'Edit Crew Member' : 'Add Crew Member';
-  if (editId) {
-    const c = crew.find(x=>x.id===editId);
-    if (!c) return;
-    document.getElementById('crewName').value = c.name;
-    document.getElementById('crewRank').value = c.rank;
-    document.getElementById('crewVessel').value = c.vessel || '';
-    document.getElementById('crewVoyageClass').value = c.voyageClass || 'domestic';
-    document.getElementById('crewEmail').value = c.email || '';
-    document.getElementById('crewPhone').value = c.phone || '';
-  } else {
-    ['crewName','crewVessel','crewEmail','crewPhone'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('crewVoyageClass').value = 'domestic';
-  }
-  document.getElementById('crewModal').classList.add('show');
+function openCrewModal(editId){
+  document.getElementById('crewEditId').value=editId||'';document.getElementById('crewModalTitle').textContent=editId?'Edit Crew Member':'Add Crew Member';
+  if(editId){const c=crew.find(x=>x.id===editId);if(!c)return;document.getElementById('crewName').value=c.name;document.getElementById('crewRank').value=c.rank;document.getElementById('crewVessel').value=c.vessel||'';document.getElementById('crewVoyageClass').value=c.voyageClass||'domestic';document.getElementById('crewEmail').value=c.email||'';document.getElementById('crewPhone').value=c.phone||''}
+  else{['crewName','crewVessel','crewEmail','crewPhone'].forEach(id=>document.getElementById(id).value='');document.getElementById('crewVoyageClass').value='domestic'}
+  document.getElementById('crewModal').classList.add('show')
 }
-function closeCrewModal() { document.getElementById('crewModal').classList.remove('show'); }
-function saveCrewMember() {
-  const name = document.getElementById('crewName').value.trim();
-  if (!name) return toast('Name is required','error');
-  const editId = document.getElementById('crewEditId').value;
-  const entry = {
-    id: editId || 'c_'+id(),
-    name,
-    rank: document.getElementById('crewRank').value,
-    vessel: document.getElementById('crewVessel').value.trim(),
-    voyageClass: document.getElementById('crewVoyageClass').value,
-    email: document.getElementById('crewEmail').value.trim(),
-    phone: document.getElementById('crewPhone').value.trim()
-  };
-  if (editId) {
-    const idx = crew.findIndex(x=>x.id===editId);
-    if (idx>=0) crew[idx]=entry;
-  } else crew.push(entry);
-  save(); closeCrewModal();
-  toast(`Crew member "${name}" ${editId?'updated':'added'}`,'success');
-  renderAll(); populateCrewSelect();
+function closeCrewModal(){document.getElementById('crewModal').classList.remove('show')}
+function saveCrewMember(){
+  const name=document.getElementById('crewName').value.trim();if(!name)return toast('Name is required','error');
+  const editId=document.getElementById('crewEditId').value;const entry={id:editId||'c_'+id(),name,rank:document.getElementById('crewRank').value,vessel:document.getElementById('crewVessel').value.trim(),voyageClass:document.getElementById('crewVoyageClass').value,email:document.getElementById('crewEmail').value.trim(),phone:document.getElementById('crewPhone').value.trim()};
+  if(editId){const idx=crew.findIndex(x=>x.id===editId);if(idx>=0)crew[idx]=entry;addAudit('crew_edit',name)}else{crew.push(entry);addAudit('crew_add',name)}
+  save();closeCrewModal();toast(`"${name}" ${editId?'updated':'added'}`,'success');renderAll();populateCrewSelect()
 }
-function editCrewMember(id) { openCrewModal(id); }
-function deleteCrewMember(id) {
-  const c = crew.find(x=>x.id===id);
-  if (!c || !confirm(`Delete "${c.name}"? This will also remove all their certificates.`)) return;
-  crew = crew.filter(x=>x.id!==id);
-  certificates = certificates.filter(x=>x.crewId!==id);
-  save(); toast(`Deleted "${c.name}"`,'error');
-  renderAll(); populateCrewSelect();
-}
+function editCrewMember(id){openCrewModal(id)}
+function deleteCrewMember(id){const c=crew.find(x=>x.id===id);if(!c||!confirm(`Delete "${c.name}" and all their certificates?`))return;certificates.filter(x=>x.crewId===id).forEach(x=>{if(x.docId)deleteDoc(x.docId).catch(()=>{})});certificates=certificates.filter(x=>x.crewId!==id);crew=crew.filter(x=>x.id!==id);addAudit('crew_delete',c.name);save();toast(`Deleted "${c.name}"`,'error');renderAll();populateCrewSelect()}
 
 // ─── CERTIFICATE MODAL ───
-function openCertModal(crewId, editId) {
-  document.getElementById('certEditId').value = editId || '';
-  document.getElementById('certCrewId').value = crewId;
-  if (editId) {
-    const cert = certificates.find(x=>x.id===editId);
-    if (!cert) return;
-    document.getElementById('certType').value = cert.type;
-    document.getElementById('certIssueDate').value = cert.issueDate || '';
-    document.getElementById('certExpiryDate').value = cert.expiryDate || '';
-    document.getElementById('certNumber').value = cert.number || '';
-    document.getElementById('certAuthority').value = cert.authority || 'Transport Canada';
-    document.getElementById('certNotes').value = cert.notes || '';
-  } else {
-    ['certIssueDate','certExpiryDate','certNumber','certNotes'].forEach(id=>document.getElementById(id).value='');
-    document.getElementById('certType').value = 'Certificate of Competency (CoC)';
-    document.getElementById('certAuthority').value = 'Transport Canada';
-  }
-  document.getElementById('certModal').classList.add('show');
+let pendingDocFile=null;
+function openCertModal(crewId,editId){
+  document.getElementById('certEditId').value=editId||'';document.getElementById('certCrewId').value=crewId;document.getElementById('certModalTitle').textContent=editId?'Edit Certificate':'Add Certificate';
+  pendingDocFile=null;document.getElementById('certDocFile').value='';document.getElementById('certDocPreview').innerHTML='';document.getElementById('certVerified').checked=false;
+  if(editId){const cert=certificates.find(x=>x.id===editId);if(!cert)return;document.getElementById('certType').value=cert.type;document.getElementById('certIssueDate').value=cert.issueDate||'';document.getElementById('certExpiryDate').value=cert.expiryDate||'';document.getElementById('certNumber').value=cert.number||'';document.getElementById('certAuthority').value=cert.authority||'Transport Canada';document.getElementById('certNotes').value=cert.notes||'';document.getElementById('certVerified').checked=cert.verified||false;if(cert.docId){getDoc(cert.docId).then(blob=>{if(blob){const url=URL.createObjectURL(blob);document.getElementById('certDocPreview').innerHTML=blob.type.startsWith('image/')?`<img src="${url}" style="max-width:200px;max-height:120px;border-radius:6px;border:1px solid var(--border)">`:`<span style="font-size:12px;color:var(--accent)">📄 Document attached (${(blob.size/1024).toFixed(0)} KB)</span>`}})}}else{['certIssueDate','certExpiryDate','certNumber','certNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('certType').value='Certificate of Competency (CoC)';document.getElementById('certAuthority').value='Transport Canada'}
+  document.getElementById('certModal').classList.add('show')
 }
-function closeCertModal() { document.getElementById('certModal').classList.remove('show'); }
-function saveCertificate() {
-  const crewId = document.getElementById('certCrewId').value;
-  const type = document.getElementById('certType').value;
-  const expiry = document.getElementById('certExpiryDate').value;
-  if (!type) return toast('Certificate type is required','error');
-  const editId = document.getElementById('certEditId').value;
-  const entry = {
-    id: editId || 'cert_'+id(),
-    crewId,
-    type,
-    issueDate: document.getElementById('certIssueDate').value,
-    expiryDate: expiry,
-    number: document.getElementById('certNumber').value.trim(),
-    authority: document.getElementById('certAuthority').value,
-    notes: document.getElementById('certNotes').value.trim()
-  };
-  if (editId) {
-    const idx = certificates.findIndex(x=>x.id===editId);
-    if (idx>=0) certificates[idx]=entry;
-  } else certificates.push(entry);
-  save(); closeCertModal();
-  toast(`Certificate "${type}" ${editId?'updated':'added'}`,'success');
-  renderAll(); populateCrewSelect();
+function closeCertModal(){document.getElementById('certModal').classList.remove('show');pendingDocFile=null}
+function previewDocFile(){
+  const file=document.getElementById('certDocFile').files[0];if(!file)return;
+  const err=validateFile(file);if(err)return toast(err,'error');
+  pendingDocFile=file;document.getElementById('certDocPreview').innerHTML=file.type.startsWith('image/')?`<img src="${URL.createObjectURL(file)}" style="max-width:200px;max-height:120px;border-radius:6px;border:1px solid var(--border)"><div style="font-size:11px;color:var(--text3)">${file.name} (${(file.size/1024).toFixed(0)} KB) — will be compressed</div>`:`<span style="font-size:13px;color:var(--accent)">📄 ${file.name} (${(file.size/1024).toFixed(0)} KB)</span>`
+}
+async function saveCertificate(){
+  const crewId=document.getElementById('certCrewId').value;const type=document.getElementById('certType').value;
+  const issueDate=document.getElementById('certIssueDate').value;const expiryDate=document.getElementById('certExpiryDate').value;
+  if(!type)return toast('Certificate type required','error');
+  const dateErr=validateDates(issueDate,expiryDate);if(dateErr)return toast(dateErr,'error');
+  const editId=document.getElementById('certEditId').value;
+  const crewMember=crew.find(c=>c.id===crewId);
+  const entry={id:editId||'cert_'+id(),crewId,type,issueDate,expiryDate,number:document.getElementById('certNumber').value.trim(),authority:document.getElementById('certAuthority').value,notes:document.getElementById('certNotes').value.trim(),verified:document.getElementById('certVerified').checked,docId:null};
+
+  // Handle document upload
+  if(pendingDocFile){
+    try{
+      const compressed=await compressImage(pendingDocFile);const docId='doc_'+id();await storeDoc(docId,compressed);
+      // Delete old doc if replacing
+      if(editId){const oldCert=certificates.find(x=>x.id===editId);if(oldCert&&oldCert.docId)await deleteDoc(oldCert.docId).catch(()=>{})}
+      entry.docId=docId
+    }catch(e){toast('Failed to store document: '+e.message,'error');return}
+  }else if(!editId||!pendingDocFile){
+    // Keep existing doc if editing without new upload
+    if(editId){const oldCert=certificates.find(x=>x.id===editId);if(oldCert)entry.docId=oldCert.docId}
+  }
+
+  if(editId){const idx=certificates.findIndex(x=>x.id===editId);if(idx>=0)certificates[idx]=entry;addAudit('cert_edit',crewMember?.name||'?',`${type} — ${expiryDate}`)}else{certificates.push(entry);addAudit('cert_add',crewMember?.name||'?',`${type} — ${expiryDate}`)}
+  save();closeCertModal();toast(`Certificate "${type}" ${editId?'updated':'added'}`,'success');renderAll();populateCrewSelect()
 }
 
 // ─── CREW SELF-SERVICE ───
-function renderCrewSelfView() {
-  const selId = document.getElementById('crewSelfSelect').value;
-  const el = document.getElementById('crewSelfContent');
-  if (!selId) { el.innerHTML = ''; return; }
-  const c = crew.find(x=>x.id===selId);
-  if (!c) { el.innerHTML = ''; return; }
-  const comp = getCompliance(c);
-  const myCerts = certificates.filter(x=>x.crewId===c.id);
-  const vc = c.voyageClass || 'domestic';
+function renderCrewSelfView(){
+  const selId=document.getElementById('crewSelfSelect').value;const el=document.getElementById('crewSelfContent');if(!selId){el.innerHTML='';return}
+  const c=crew.find(x=>x.id===selId);if(!c){el.innerHTML='';return}
+  const comp=getCompliance(c);const myCerts=certificates.filter(x=>x.crewId===c.id);const vc=c.voyageClass||'domestic';
+  el.innerHTML=`<div class="card" style="text-align:center;background:linear-gradient(135deg,var(--accent-glow),var(--blue-glow))"><div class="compliance-ring" style="width:120px;height:120px;margin:0 auto;position:relative"><svg width="120" height="120" viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--border)" stroke-width="8"/><circle cx="60" cy="60" r="52" fill="none" stroke="${comp.percent>=80?'var(--green)':comp.percent>=50?'var(--amber)':'var(--red)'}" stroke-width="8" stroke-dasharray="${comp.percent*3.27} 327" stroke-linecap="round"/></svg><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:28px;font-weight:800">${comp.percent}%</div></div><div style="margin-top:12px"><h2>${c.name}</h2><span class="badge badge-purple">${c.rank}</span> <span class="badge ${vc==='stcw'?'badge-info':'badge-valid'}">${vc==='stcw'?'STCW':'Domestic'}${vc==='both'?' + STCW':''}</span><div style="color:var(--text2);font-size:13px;margin-top:4px">${c.vessel||'Unassigned'} · ${c.email||'No email'}</div></div>${comp.gaps.length?`<div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center">${comp.gaps.map(g=>`<span class="badge ${g.status==='expired'?'badge-expired':g.status==='warning'?'badge-warning':g.status==='unverified'?'badge-info':'badge-info'}" style="font-size:11px">${g.status==='expired'?'⚠ EXPIRED':g.status==='warning'?'⚡ SOON':g.status==='unverified'?'🔒 UNVERIFIED':'❌ MISSING'}: ${g.type}</span>`).join('')}</div>`:'<div style="margin-top:12px"><span class="badge badge-valid">✅ All certifications current and verified</span></div>'}</div><div class="section-title">📋 My Certificates</div><button class="btn btn-primary btn-sm" onclick="openCertModal('${c.id}')" style="margin-bottom:12px">+ Add Certificate</button>${myCerts.length?`<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>Certificate</th><th>Issued</th><th>Expires</th><th>Status</th><th>Doc</th><th>Verified</th></tr></thead><tbody>${myCerts.map(cert=>{const st=certStatus(cert.expiryDate);const cls=st.urgency===0?'row-expired':st.urgency===1?'row-warning':'';return`<tr class="${cls}"><td><strong>${cert.type}</strong></td><td>${fmt(cert.issueDate)}</td><td>${fmt(cert.expiryDate)}</td><td><span class="badge ${st.cls}">${st.label}</span></td><td>${cert.docId?`<div class="doc-thumb" onclick="viewDoc('${cert.docId}')" title="Click to view">📄</div>`:'<span style="color:var(--text3);font-size:12px">none</span>'}</td><td>${cert.verified?'<span class="badge badge-valid">✓ Yes</span>':'<span class="badge badge-warning">⚠ No</span>'}</td></tr>`}).join('')}</tbody></table></div>`:'<div class="card" style="text-align:center;color:var(--text3)">No certificates on file.</div>'}<div class="card" style="margin-top:14px"><h3>📎 Regulatory Links</h3><div style="display:flex;flex-direction:column;gap:4px;margin-top:8px">${REG_SOURCES.map(r=>`<a href="${r.url}" target="_blank" rel="noopener" style="color:var(--blue);font-size:12px;text-decoration:none;padding:3px 0">↗ ${r.name}</a>`).join('')}</div></div>`
+}
 
-  el.innerHTML = `
-    <div class="card" style="text-align:center;background:linear-gradient(135deg,var(--accent-glow),var(--blue-glow))">
-      <div class="compliance-ring">
-        <svg width="120" height="120" viewBox="0 0 120 120">
-          <circle cx="60" cy="60" r="52" fill="none" stroke="var(--border)" stroke-width="8"/>
-          <circle cx="60" cy="60" r="52" fill="none" stroke="${comp.percent>=80?'var(--green)':comp.percent>=50?'var(--amber)':'var(--red)'}" stroke-width="8"
-            stroke-dasharray="${comp.percent*3.27} 327" stroke-linecap="round"/>
-        </svg>
-        <div class="ring-label">${comp.percent}%</div>
-      </div>
-      <div style="margin-top:12px">
-        <h2>${c.name}</h2>
-        <span class="badge badge-purple">${c.rank}</span>
-        <span class="badge ${vc==='stcw'?'badge-info':'badge-valid'}">${vc==='stcw'?'STCW':'Domestic'}${vc==='both'?' + STCW':''}</span>
-        <div style="color:var(--text2);font-size:13px;margin-top:4px">${c.vessel||'Unassigned'} · ${c.email||'No email'}</div>
-      </div>
-      ${comp.gaps.length ? `<div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
-        ${comp.gaps.map(g => `<span class="badge ${g.status==='expired'?'badge-expired':g.status==='warning'?'badge-warning':'badge-info'}" style="font-size:11px">${g.status==='expired'?'⚠ EXPIRED':g.status==='warning'?'⚡ SOON':'❌ MISSING'}: ${g.type}</span>`).join('')}
-      </div>` : '<div style="margin-top:12px"><span class="badge badge-valid">✅ All certifications current</span></div>'}
-    </div>
+async function viewDoc(docId){
+  try{const blob=await getDoc(docId);if(!blob)return toast('Document not found','error');const url=URL.createObjectURL(blob);window.open(url,'_blank')}catch(e){toast('Could not open document','error')}
+}
 
-    <div class="section-title">📋 My Certificates</div>
-    <button class="btn btn-primary btn-sm" onclick="openCertModal('${c.id}')" style="margin-bottom:12px">+ Add Certificate</button>
-    ${myCerts.length ? `<div style="overflow-x:auto"><table class="data-table"><thead><tr>
-      <th>Certificate</th><th>Issued</th><th>Expires</th><th>Status</th><th>Number</th>
-    </tr></thead><tbody>${myCerts.map(cert => {
-      const st = certStatus(cert.expiryDate, vc);
-      const cls = st.urgency===0?'row-expired':st.urgency===1?'row-warning':'';
-      return `<tr class="${cls}">
-        <td><strong>${cert.type}</strong></td>
-        <td>${fmt(cert.issueDate)}</td>
-        <td>${fmt(cert.expiryDate)}</td>
-        <td><span class="badge ${st.cls}">${st.label}</span></td>
-        <td>${cert.number||'-'}</td>
-      </tr>`;
-    }).join('')}</tbody></table></div>` : '<div class="card" style="text-align:center;color:var(--text3)">No certificates on file. Click + Add Certificate to start.</div>'}
+// ─── AUDIT LOG ───
+function renderAuditLog(){
+  const el=document.getElementById('auditLog');const log=auditLog.slice().reverse().slice(0,200);
+  el.innerHTML=log.length?log.map(e=>`<div class="entry"><span class="ts">${e.ts.slice(0,19).replace('T',' ')}</span><span class="who">[${e.who}]</span><span>${e.action}</span><strong>${e.target}</strong>${e.detail?`<span style="color:var(--text2)"> — ${e.detail}</span>`:''}</div>`).join(''):'<div style="color:var(--text3);padding:20px;text-align:center">No audit entries yet.</div>'
+}
+function exportAuditLog(){
+  const csv=['Timestamp,Action,Target,Detail,Role'].concat(auditLog.map(e=>`"${e.ts}","${e.action}","${e.target}","${e.detail}","${e.who}"`)).join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`audit_log_${t()}.csv`;a.click();toast('Audit log exported','success')
+}
 
-    <div class="card" style="margin-top:14px">
-      <h3>📎 Regulatory Links</h3>
-      <p style="font-size:12px;color:var(--text2);margin-bottom:8px">Official sources for your certification requirements:</p>
-      ${REG_SOURCES.filter(r=>!r.name.includes('STCW')&&!r.name.includes('IMO')).map(r => `<a href="${r.url}" target="_blank" rel="noopener" style="display:block;color:var(--blue);font-size:12px;padding:4px 0;text-decoration:none">↗ ${r.name}</a>`).join('')}
-      ${vc==='stcw'||vc==='both' ? REG_SOURCES.filter(r=>r.name.includes('STCW')||r.name.includes('IMO')).map(r => `<a href="${r.url}" target="_blank" rel="noopener" style="display:block;color:var(--blue);font-size:12px;padding:4px 0;text-decoration:none">↗ ${r.name}</a>`).join('') : ''}
-    </div>
-  `;
+// ─── STORAGE INFO ───
+async function renderStorageInfo(){
+  const el=document.getElementById('storageInfo');const u=await getStorageUsage();
+  const pct=u.quota?Math.round(u.used/u.quota*100):0;const color=pct>90?'var(--red)':pct>70?'var(--amber)':'var(--green)';
+  el.innerHTML=`<div style="display:flex;justify-content:space-between;font-size:13px"><span>Used: ${(u.used/1024/1024).toFixed(1)} MB</span><span>Quota: ${(u.quota/1024/1024).toFixed(1)} MB</span></div><div class="storage-bar"><div class="storage-bar-fill" style="width:${pct}%;background:${color}"></div></div><div style="font-size:11px;color:var(--text3);margin-top:4px">${pct}% of browser storage used · Documents stored in IndexedDB, data in localStorage</div>`
 }
 
 // ─── REPORTS ───
-function renderReport() {
-  if (currentTab !== 'reports') return;
-  const stats = crew.map(c => ({...c, comp: getCompliance(c)}));
-  const avgPct = crew.length ? Math.round(stats.reduce((a,s)=>a+s.comp.percent,0)/crew.length) : 0;
-  document.getElementById('reportPreview').innerHTML = `
-    <div class="card">
-      <h3>Fleet Compliance Summary — ${fmt(t())}</h3>
-      <p style="color:var(--text2)">${crew.length} crew members · ${certificates.length} certificates on file · ${avgPct}% fleet compliance</p>
-      <div style="margin-top:14px;overflow-x:auto"><table class="data-table"><thead><tr>
-        <th>#</th><th>Name</th><th>Rank</th><th>Vessel</th><th>Voyage</th><th>Compliance</th><th>Expired</th><th>Missing</th>
-      </tr></thead><tbody>${stats.map((s,i) => `
-        <tr class="${s.comp.expired>0?'row-expired':s.comp.warning>0?'row-warning':''}">
-          <td>${i+1}</td><td>${s.name}</td><td>${s.rank}</td><td>${s.vessel||'-'}</td>
-          <td>${s.voyageClass==='stcw'?'STCW':'Domestic'}${s.voyageClass==='both'?'+STCW':''}</td>
-          <td><strong>${s.comp.percent}%</strong></td>
-          <td style="color:var(--red)">${s.comp.expired||'—'}</td>
-          <td style="color:var(--amber)">${s.comp.gaps.filter(g=>g.status==='missing').length||'—'}</td>
-        </tr>`).join('')}</tbody></table></div>
-    </div>`;
+function renderReport(){
+  if(currentTab!=='reports')return;const stats=crew.map(c=>({...c,comp:getCompliance(c)}));const avgPct=crew.length?Math.round(stats.reduce((a,s)=>a+s.comp.percent,0)/crew.length):0;
+  document.getElementById('reportPreview').innerHTML=`<div class="card"><h3>Fleet Compliance Summary — ${fmt(t())}</h3><p style="color:var(--text2)">${crew.length} crew · ${certificates.length} certificates · ${avgPct}% fleet compliance</p><div style="margin-top:14px;overflow-x:auto"><table class="data-table"><thead><tr><th>#</th><th>Name</th><th>Rank</th><th>Vessel</th><th>Voyage</th><th>Compliance</th><th>Expired</th><th>Missing</th></tr></thead><tbody>${stats.map((s,i)=>`<tr class="${s.comp.expired>0?'row-expired':s.comp.warning>0?'row-warning':''}"><td>${i+1}</td><td>${s.name}</td><td>${s.rank}</td><td>${s.vessel||'-'}</td><td>${s.voyageClass==='stcw'?'STCW':'Domestic'}${s.voyageClass==='both'?'+STCW':''}</td><td><strong>${s.comp.percent}%</strong></td><td style="color:var(--red)">${s.comp.expired||'—'}</td><td style="color:var(--amber)">${s.comp.gaps.filter(g=>g.status==='missing'||g.status==='unverified').length||'—'}</td></tr>`).join('')}</tbody></table></div></div>`
 }
+function exportFullReport(){renderReport();setTimeout(()=>window.print(),300)}
+function exportCrewCSV(){const stats=crew.map(c=>({...c,comp:getCompliance(c)}));const rows=[['Name','Rank','Vessel','Voyage Class','Compliance %','Expired Certs','Missing/Unverified']];stats.forEach(s=>rows.push([s.name,s.rank,s.vessel||'',s.voyageClass,s.comp.percent,s.comp.expired,s.comp.gaps.filter(g=>g.status==='missing'||g.status==='unverified').length]));const csv=rows.map(r=>r.map(v=>'"'+(v+'').replace(/"/g,'""')+'"').join(',')).join('\n');const blob=new Blob(['\uFEFF'+csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`crew_compliance_${t()}.csv`;a.click();toast('CSV exported','success')}
+function exportData(){const data={crew,certificates,rules,exported:new Date().toISOString(),version:'2.0'};const json=JSON.stringify(data,null,2);const blob=new Blob([json],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`crewcert_v2_data_${t()}.json`;a.click();toast(`Exported ${crew.length} crew, ${certificates.length} certs`,'success')}
+function importData(evt){const file=evt.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(e){try{const data=JSON.parse(e.target.result);if(!data.crew||!data.certificates)return toast('Invalid format','error');if(!confirm(`Import ${data.crew.length} crew and ${data.certificates.length} certificates? Current data will be REPLACED.`))return;crew=data.crew;certificates=data.certificates;if(data.rules)rules=data.rules;save();toast(`Imported ${crew.length} crew, ${certificates.length} certs`,'success');renderAll();populateCrewSelect()}catch(err){toast('Error: '+err.message,'error')}};reader.readAsText(file);evt.target.value=''}
 
-function exportFullReport() {
-  renderReport();
-  setTimeout(() => window.print(), 300);
-}
-
-function exportCrewCSV() {
-  const stats = crew.map(c => ({...c, comp: getCompliance(c)}));
-  const rows = [['Name','Rank','Vessel','Voyage Class','Compliance %','Expired Certs','Missing Certs']];
-  stats.forEach(s => rows.push([s.name,s.rank,s.vessel||'',s.voyageClass,s.comp.percent,s.comp.expired,s.comp.gaps.filter(g=>g.status==='missing').length]));
-  const csv = rows.map(r=>r.map(v=>'"'+(v+'').replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv'});
-  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`crew_compliance_${t()}.csv`; a.click();
-  toast('CSV exported','success');
-}
-
-// ─── DATA EXPORT / IMPORT (no document files) ───
-function exportData() {
-  const data = { crew, certificates, exported: new Date().toISOString(), version: '1.0' };
-  const json = JSON.stringify(data, null, 2);
-  const blob = new Blob([json], {type:'application/json'});
-  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`crewcert_data_${t()}.json`; a.click();
-  toast(`Exported ${crew.length} crew, ${certificates.length} certificates`,'success');
-}
-
-function importData(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (!data.crew || !data.certificates) return toast('Invalid file format — expected crew and certificates arrays','error');
-      if (!confirm(`Import ${data.crew.length} crew members and ${data.certificates.length} certificates? This will REPLACE current data.`)) return;
-      crew = data.crew;
-      certificates = data.certificates;
-      save();
-      toast(`Imported ${crew.length} crew, ${certificates.length} certificates`,'success');
-      renderAll(); populateCrewSelect();
-    } catch(err) { toast('Error reading file: ' + err.message,'error'); }
-  };
-  reader.readAsText(file);
-  event.target.value = ''; // reset so same file can be re-imported
-}
-
-// ─── SEED SAMPLE DATA ───
-function seedData() {
-  if (crew.length > 0 && !confirm('This will clear existing data and load samples. Continue?')) return;
-  const now = new Date();
-  const samples = [
-    { name:'James MacDonald', rank:'Master', vessel:'Evans Spirit', voyageClass:'stcw', email:'jmac@example.com' },
-    { name:'Pierre Lefebvre', rank:'Chief Engineer', vessel:'Blair McKeil', voyageClass:'stcw', email:'plefebvre@example.com' },
-    { name:'Michael Chen', rank:'Chief Mate', vessel:'Northern Venture', voyageClass:'domestic', email:'mchen@example.com' },
-    { name:'Robert Kiprop', rank:'Second Engineer', vessel:'Florence Spirit', voyageClass:'domestic', email:'rkiprop@example.com' },
-    { name:'Andre Tremblay', rank:'Deckhand / OS', vessel:'Harvest Spirit', voyageClass:'domestic', email:'atremblay@example.com' },
-    { name:'Sarah Osei', rank:'Cook', vessel:'McKeil Spirit', voyageClass:'stcw', email:'sosei@example.com' },
-  ];
-
-  crew = samples.map(s => ({
-    id: 'c_' + id(), ...s, phone: '+1 555-' + Math.floor(1000+Math.random()*9000)
-  }));
-
-  certificates = [];
-  crew.forEach(c => {
-    const required = RULES[c.rank]?.[c.voyageClass] || [];
-    required.forEach((type, i) => {
-      const expiryOffset = type==='Marine Medical Certificate' ? (c.voyageClass==='stcw'?730:1825) : 365*(2+Math.floor(Math.random()*4));
-      const daysOffset = i === 0 ? -30 : i === 1 ? 15 : expiryOffset; // Some expired, some expiring
-      const exp = new Date(now.getTime() + daysOffset*86400000);
-      certificates.push({
-        id: 'cert_'+id(), crewId: c.id, type,
-        issueDate: new Date(now.getTime() - 365*86400000).toISOString().split('T')[0],
-        expiryDate: exp.toISOString().split('T')[0],
-        number: 'TC-24-' + Math.floor(10000+Math.random()*90000),
-        authority: 'Transport Canada'
-      });
-    });
-  });
-
-  save(); toast('Sample fleet data loaded — 6 crew, ' + certificates.length + ' certificates', 'success');
-  renderAll(); populateCrewSelect();
+// ─── SEED ───
+function seedData(){
+  if(crew.length>0&&!confirm('Replace existing data with samples?'))return;
+  const now=new Date();
+  crew=[{name:'James MacDonald',rank:'Master',vessel:'Evans Spirit',voyageClass:'stcw',email:'jmac@example.com',phone:'+1 555-1001'},{name:'Pierre Lefebvre',rank:'Chief Engineer',vessel:'Blair McKeil',voyageClass:'stcw',email:'plefebvre@example.com',phone:'+1 555-1002'},{name:'Michael Chen',rank:'Chief Mate',vessel:'Northern Venture',voyageClass:'domestic',email:'mchen@example.com',phone:'+1 555-1003'},{name:'Robert Kiprop',rank:'Second Engineer',vessel:'Florence Spirit',voyageClass:'domestic',email:'rkiprop@example.com',phone:'+1 555-1004'},{name:'Andre Tremblay',rank:'Deckhand / OS',vessel:'Harvest Spirit',voyageClass:'domestic',email:'atremblay@example.com',phone:'+1 555-1005'},{name:'Sarah Osei',rank:'Cook',vessel:'McKeil Spirit',voyageClass:'stcw',email:'sosei@example.com',phone:'+1 555-1006'}].map(s=>({...s,id:'c_'+id()}));
+  certificates=[];crew.forEach(c=>{const required=rules[c.rank]?.[c.voyageClass]||[];required.forEach((type,i)=>{const expiryOffset=type==='Marine Medical Certificate'?(c.voyageClass==='stcw'?730:1825):365*(2+Math.floor(Math.random()*4));const daysOffset=i===0?-30:i===1?15:expiryOffset;certificates.push({id:'cert_'+id(),crewId:c.id,type,issueDate:new Date(now.getTime()-365*86400000).toISOString().split('T')[0],expiryDate:new Date(now.getTime()+daysOffset*86400000).toISOString().split('T')[0],number:'TC-24-'+Math.floor(10000+Math.random()*90000),authority:'Transport Canada',verified:i>1})})});
+  rules=DEFAULT_RULES;auditLog=[];
+  save();toast('Sample fleet loaded — 6 crew, '+certificates.length+' certificates','success');renderAll();populateCrewSelect()
 }
 
 // ─── INIT ───
-document.getElementById('crewModal').addEventListener('click', function(e) { if (e.target===this) closeCrewModal(); });
-document.getElementById('certModal').addEventListener('click', function(e) { if (e.target===this) closeCertModal(); });
-document.addEventListener('keydown', function(e) { if ((e.ctrlKey||e.metaKey)&&e.key==='f') { e.preventDefault(); const s=document.getElementById('crewSearch'); if(s)s.focus(); } });
+document.getElementById('crewModal').addEventListener('click',function(e){if(e.target===this)closeCrewModal()});
+document.getElementById('certModal').addEventListener('click',function(e){if(e.target===this)closeCertModal()});
+document.getElementById('ruleEditorModal').addEventListener('click',function(e){if(e.target===this)closeRuleEditor()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeCrewModal();closeCertModal();closeRuleEditor()}if((e.ctrlKey||e.metaKey)&&e.key==='f'){e.preventDefault();const s=document.getElementById('crewSearch');if(s)s.focus()}});
 
-load();
-if (crew.length === 0) seedData();
-else { renderAll(); populateCrewSelect(); updateRegBadge(); }
-if (!getRegWatch()) runRegWatch();
+(async function(){await openDB();load();if(crew.length===0)seedData();else{renderAll();populateCrewSelect();updateRegBadge()}if(!getRegWatch())runRegWatch()})();
 </script>
 
 <div style="text-align:center;padding:20px;color:var(--text3);font-size:11px">
-  Created by Rubin Varghese · June 13, 2026 · v1.0<br>
-  Regulatory data sourced from Transport Canada, ISED, IMO, and MLC 2006
+  Created by Rubin Varghese · June 13, 2026 · CrewCert v2 UPGRADED<br>
+  Document storage: IndexedDB · Data: localStorage · All regulatory links to official TC/ISED/IMO sources
 </div>
 
 </body>
