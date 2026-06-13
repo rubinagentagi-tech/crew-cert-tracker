@@ -121,7 +121,9 @@ main { max-width: 1200px; margin: 0 auto; padding: 20px 16px; }
 .stat-card {
   background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
   padding: 16px; position: relative; overflow: hidden;
+  cursor: pointer; transition: all 0.2s;
 }
+.stat-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.3); }
 .stat-card::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
 }
@@ -371,8 +373,11 @@ label { display: block; font-size: 12px; font-weight: 600; color: var(--text3); 
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
         <button class="btn btn-primary" onclick="exportFullReport()">📥 Export Full Compliance Report</button>
         <button class="btn btn-outline" onclick="exportCrewCSV()">📊 Export CSV</button>
+        <button class="btn btn-outline" onclick="exportData()">💾 Download All Data (JSON)</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('importFileInput').click()">📂 Import Data (JSON)</button>
         <button class="btn btn-ghost btn-sm" onclick="window.print()">🖨 Print Report</button>
       </div>
+      <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importData(event)">
       <div id="reportPreview"></div>
     </div>
   </div>
@@ -540,6 +545,24 @@ function medExpiryRule(voyageClass) {
 }
 
 // ─── REGULATORY LINKS ───
+const CERT_URLS = {
+  'Certificate of Competency (CoC)': 'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/page-25.html#h-120',
+  'Marine Medical Certificate': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-medical-certificate-requirements',
+  'MED — Domestic Vessel Safety': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
+  'MED — STCW Basic Safety (A1+B2)': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
+  'MED — Survival Craft (B1)': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
+  'MED — Advanced Firefighting (B2+C)': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
+  'Marine Basic First Aid': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
+  'Marine Advanced First Aid': 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-emergency-duties-training',
+  'ROC-MC (Radio Operator)': 'https://ised-isde.canada.ca/site/radio-operator-certification/en/radiotelephone-operator-certificates',
+  'Fatigue Management at Sea': 'https://tc.canada.ca/en/marine-transportation/marine-safety/fatigue-management',
+  'Tanker Familiarization': 'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/page-28.html',
+  'Tanker Specialized (Oil/Chemical)': 'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/page-28.html',
+  'Security Awareness / DSOC': 'https://tc.canada.ca/en/marine-transportation/marine-security/marine-transportation-security-clearance-program',
+  'Other': 'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/'
+};
+const CERT_REF = (name) => CERT_URLS[name] ? `<a href="${CERT_URLS[name]}" target="_blank" rel="noopener" title="Verify requirement" style="font-size:10px;color:var(--blue);text-decoration:none;margin-left:4px">🔗</a>` : '';
+
 const REG_SOURCES = [
   { name: 'Transport Canada — Marine Personnel Regulations (SOR/2007-115)', url: 'https://laws-lois.justice.gc.ca/eng/regulations/SOR-2007-115/', desc: 'Primary Canadian marine crew certification regulation. Covers Certificates of Competency, MED, medical certificates.' },
   { name: 'Transport Canada — Marine Medical Certificate Requirements', url: 'https://tc.canada.ca/en/marine-transportation/marine-safety/marine-medical-certificate-requirements', desc: 'Medical fitness requirements. Domestic: valid 5 years. STCW: valid 2 years.' },
@@ -697,27 +720,27 @@ function renderDashboard() {
   const avgPct = total ? Math.round(stats.reduce((a,s)=>a+s.comp.percent, 0) / total) : 0;
 
   document.getElementById('statGrid').innerHTML = `
-    <div class="stat-card ${avgPct>=90?'healthy':avgPct>=70?'warning':'danger'}">
+    <div class="stat-card ${avgPct>=90?'healthy':avgPct>=70?'warning':'danger'}" onclick="navigateToFiltered('all')" title="Click to see all crew">
       <div class="stat-label">Fleet Compliance</div>
       <div class="stat-value" style="color:${avgPct>=90?'var(--green)':avgPct>=70?'var(--amber)':'var(--red)'}">${avgPct}%</div>
     </div>
-    <div class="stat-card ${fullyCompliant===total?'healthy':'info'}">
+    <div class="stat-card ${fullyCompliant===total?'healthy':'info'}" onclick="navigateToFiltered('ok')" title="Click to see fully compliant crew">
       <div class="stat-label">Fully Compliant</div>
       <div class="stat-value" style="color:var(--accent)">${fullyCompliant}/${total}</div>
     </div>
-    <div class="stat-card ${hasExpired>0?'danger':'healthy'}">
+    <div class="stat-card ${hasExpired>0?'danger':'healthy'}" onclick="${hasExpired>0?`navigateToFiltered('expired')`:'return'}" title="${hasExpired>0?'Click to see crew with expired certs':'No expired certs'}">
       <div class="stat-label">Crew w/ Expired Certs</div>
       <div class="stat-value" style="color:${hasExpired>0?'var(--red)':'var(--green)'}">${hasExpired}</div>
     </div>
-    <div class="stat-card ${hasWarning>0?'warning':'healthy'}">
+    <div class="stat-card ${hasWarning>0?'warning':'healthy'}" onclick="${hasWarning>0?`navigateToFiltered('warning')`:'return'}" title="${hasWarning>0?'Click to see crew with expiring certs':'No warnings'}">
       <div class="stat-label">Expiring ≤30 Days</div>
       <div class="stat-value" style="color:${hasWarning>0?'var(--amber)':'var(--green)'}">${hasWarning}</div>
     </div>
-    <div class="stat-card danger">
+    <div class="stat-card danger" onclick="${totalExpired>0?`navigateToFiltered('expired')`:'return'}" title="${totalExpired>0?'Click to see expired certificates':'No expired certs'}">
       <div class="stat-label">Total Expired Certs</div>
       <div class="stat-value" style="color:var(--red)">${totalExpired}</div>
     </div>
-    <div class="stat-card info">
+    <div class="stat-card info" onclick="${totalMissing>0?`navigateToFiltered('all')`:'return'}" title="${totalMissing>0?'Click to see crew with missing certs':'No missing certs'}">
       <div class="stat-label">Missing Certificates</div>
       <div class="stat-value" style="color:var(--purple)">${totalMissing}</div>
     </div>
@@ -743,6 +766,14 @@ function renderDashboard() {
       </div>
     </div>
   `).join('') : '<div class="card" style="text-align:center;color:var(--green)">✅ All crew fully compliant — no gaps detected.</div>';
+}
+
+function navigateToFiltered(status) {
+  switchTab('crew-list');
+  document.getElementById('crewSearch').value = '';
+  document.getElementById('crewFilterVessel').value = 'all';
+  document.getElementById('crewFilterStatus').value = status;
+  renderCrewList();
 }
 
 function focusCrewMember(id) {
@@ -812,11 +843,11 @@ function renderRules() {
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;font-size:13px">
         <div>
           <h4 style="color:var(--green);margin-bottom:6px">🟢 Domestic (Great Lakes)</h4>
-          ${d.map(c => `<div style="padding:4px 0;border-bottom:1px solid var(--border)">${s.includes(c)?'✅':'✅'} ${c}</div>`).join('')}
+          ${d.map(c => `<div style="padding:4px 0;border-bottom:1px solid var(--border)">${s.includes(c)?'✅':'✅'} ${c}${CERT_REF(c)}</div>`).join('')}
         </div>
         <div>
           <h4 style="color:var(--blue);margin-bottom:6px">🔵 STCW (International)</h4>
-          ${s.map(c => `<div style="padding:4px 0;border-bottom:1px solid var(--border)">${d.includes(c)?'✅':'➕'} ${c}</div>`).join('')}
+          ${s.map(c => `<div style="padding:4px 0;border-bottom:1px solid var(--border)">${d.includes(c)?'✅':'➕'} ${c}${CERT_REF(c)}</div>`).join('')}
         </div>
       </div>
     </div>`;
@@ -1021,6 +1052,35 @@ function exportCrewCSV() {
   const blob = new Blob(['\uFEFF'+csv],{type:'text/csv'});
   const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`crew_compliance_${t()}.csv`; a.click();
   toast('CSV exported','success');
+}
+
+// ─── DATA EXPORT / IMPORT (no document files) ───
+function exportData() {
+  const data = { crew, certificates, exported: new Date().toISOString(), version: '1.0' };
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], {type:'application/json'});
+  const a = document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`crewcert_data_${t()}.json`; a.click();
+  toast(`Exported ${crew.length} crew, ${certificates.length} certificates`,'success');
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.crew || !data.certificates) return toast('Invalid file format — expected crew and certificates arrays','error');
+      if (!confirm(`Import ${data.crew.length} crew members and ${data.certificates.length} certificates? This will REPLACE current data.`)) return;
+      crew = data.crew;
+      certificates = data.certificates;
+      save();
+      toast(`Imported ${crew.length} crew, ${certificates.length} certificates`,'success');
+      renderAll(); populateCrewSelect();
+    } catch(err) { toast('Error reading file: ' + err.message,'error'); }
+  };
+  reader.readAsText(file);
+  event.target.value = ''; // reset so same file can be re-imported
 }
 
 // ─── SEED SAMPLE DATA ───
